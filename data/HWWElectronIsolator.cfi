@@ -1,0 +1,23 @@
+module isolatedElectrons = HWWElectronIsolation {
+
+  InputTag src  				  = pixelMatchGsfElectrons
+  InputTag SelectedElectronRefCollectionLabel	  = selectedElectronsRef
+  InputTag TrackCollectionLabel 		  = ctfWithMaterialTracks
+
+  double IntRadius				  = 0.015
+  double ExtRadius				  = 0.2
+  double TrackIsolCut				  = 0.1
+  bool doRefCheck				  = true
+}
+
+module isolatedElectronsRef = HWWElectronIsolationRef {
+
+  InputTag src  				  = pixelMatchGsfElectrons	  
+  InputTag SelectedElectronRefCollectionLabel	  = selectedElectronsRef
+  InputTag TrackCollectionLabel 		  = ctfWithMaterialTracks
+  double IntRadius				  = 0.015
+  double ExtRadius				  = 0.2
+  double TrackIsolCut				  = 0.1
+  bool doRefCheck				  = true
+}
+

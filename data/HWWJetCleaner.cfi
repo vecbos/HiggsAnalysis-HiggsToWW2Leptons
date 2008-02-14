@@ -1,0 +1,6 @@
+module cleanedJets = HWWJetCleaner {
+  InputTag GSFInputTag = iterativeCone5CaloJets     
+  double maxDeltaR = 0.2
+  double maxHadronicOverEm = 0.2
+  double minEleOJetEratio = 0.9
+}
