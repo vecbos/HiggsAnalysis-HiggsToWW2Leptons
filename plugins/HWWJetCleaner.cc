@@ -39,12 +39,11 @@ HWWJetCleaner::select (edm::Handle<HWWJetCleaner::collection> jetCollectionHandl
     //PG loop over electrons
     for (reco::PixelMatchGsfElectronCollection::const_iterator eleIt = GSFHandle->begin () ;
          eleIt != GSFHandle->end () ;++eleIt){
-      //PG NB should we use the SC direction, or the electron one?
       double deltaR =
         ROOT::Math::VectorUtil::DeltaR (eleIt->momentum (),jetIt->momentum ()) ;
       if (deltaR < m_maxDeltaR &&
           eleIt->hadronicOverEm() <  m_maxHadronicOverEm &&
-          eleIt->superCluster()->energy () /
+          eleIt->caloEnergy() /
           jetIt->energy () > m_minEleOJetEratio){
         discard = true ; break ;
       }
