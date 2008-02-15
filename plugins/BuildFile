@@ -9,6 +9,6 @@
 <use name=root>
 <use name=SimDataFormats/HepMCProduct>
 <use name=DataFormats/EgammaCandidates>
-<library file="*.cc" name=HiggsAnalysisHoggsToWW2LeptonsPlugins>
+<library file="*.cc" name=HiggsAnalysisHiggsToWW2LeptonsPlugins>
   <flags EDM_PLUGIN=1>
 </library>
