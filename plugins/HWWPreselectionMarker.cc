@@ -82,12 +82,15 @@ void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& i
         else
 	// 2 good leptons found
         { 
+
+	  selectedEvents[1]++;
+
 	  const RecoCandidate *lepton1 = leptons[0];
 	  const RecoCandidate *lepton2 = leptons[1];
 
 	  if(leptons.size() > 2) {
 
-	    selectedEvents[1]++;
+	   
 
 	    std::vector<const RecoCandidate*>::const_iterator lepton;
 
