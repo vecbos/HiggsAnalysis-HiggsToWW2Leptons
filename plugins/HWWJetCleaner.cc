@@ -1,6 +1,6 @@
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWJetCleaner.h"
+#include "DataFormats/JetReco/interface/CaloJetfwd.h"
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectronFwd.h"
-
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include <Math/VectorUtil.h>

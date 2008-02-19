@@ -18,12 +18,13 @@
 #include "DataFormats/Common/interface/Handle.h" 
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/JetReco/interface/CaloJetCollection.h"
-
+#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectronFwd.h"
 #include "Geometry/CaloGeometry/interface/CaloGeometry.h"
 #include "Geometry/CaloGeometry/interface/CaloCellGeometry.h"
 #include "Geometry/Records/interface/IdealGeometryRecord.h"
 
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWUtils.h"
+
 
 class HWWJetCleaner {
 	

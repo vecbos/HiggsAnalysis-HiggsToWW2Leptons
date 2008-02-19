@@ -6,6 +6,8 @@
 #include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/JetReco/interface/CaloJet.h"
+#include "DataFormats/JetReco/interface/CaloJetCollection.h"
 #include "PhysicsTools/UtilAlgos/interface/ObjectSelector.h"
 #include "PhysicsTools/UtilAlgos/interface/SortCollectionSelector.h"
 #include "PhysicsTools/Utilities/interface/PtComparator.h"
@@ -20,6 +22,7 @@
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWMuonSelector.h"
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWElectronIsolator.h"
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWMuonIsolator.h"
+#include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWJetCleaner.h"
 
 typedef ObjectSelector<HWWElectronSelector> HWWElectronSelection;
 typedef ObjectSelector<HWWElectronSelector, edm::RefVector<reco::PixelMatchGsfElectronCollection> > HWWElectronSelectionRef;
@@ -30,6 +33,9 @@ typedef ObjectSelector<HWWElectronIsolator> HWWElectronIsolation;
 typedef ObjectSelector<HWWElectronIsolator, edm::RefVector<reco::PixelMatchGsfElectronCollection> > HWWElectronIsolationRef;
 typedef ObjectSelector<HWWMuonIsolator> HWWMuonIsolation;
 typedef ObjectSelector<HWWMuonIsolator, edm::RefVector<reco::MuonCollection> > HWWMuonIsolationRef;
+//Jet cleaning
+typedef ObjectSelector<HWWJetCleaner> HWWJetCleaning;
+typedef ObjectSelector<HWWJetCleaner, edm::RefVector<reco::CaloJetCollection> > HWWJetCleaningRef;
 
 DEFINE_SEAL_MODULE () ;
 DEFINE_ANOTHER_FWK_MODULE(HWWElectronSelection);
@@ -41,3 +47,5 @@ DEFINE_ANOTHER_FWK_MODULE(HWWElectronIsolation);
 DEFINE_ANOTHER_FWK_MODULE(HWWElectronIsolationRef);
 DEFINE_ANOTHER_FWK_MODULE(HWWMuonIsolation);
 DEFINE_ANOTHER_FWK_MODULE(HWWMuonIsolationRef);
+DEFINE_ANOTHER_FWK_MODULE(HWWJetCleaning);
+DEFINE_ANOTHER_FWK_MODULE(HWWJetCleaningRef) ;
