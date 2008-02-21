@@ -139,30 +139,31 @@ void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& i
 	  if(inmass_sqrt<invMassMin_)*pOut=false;
 	  else selectedEvents[5]++;    
 	}
+        if(*pOut==true) selectedEvents[6]++;
         iEvent.put(pOut);       
 }
 
 
 void HWWPreselectionMarker::beginJob(const edm::EventSetup&)
 {
-	for(int i=0;i<6;i++)
+	for(int i=0;i<7;i++)
 	  selectedEvents[i]=0;	
 }
 
 
 void HWWPreselectionMarker::endJob() {
-  std::string cutnames[10];
-  cutnames[1]="# of Leptons > 1";
-  cutnames[2]="one lepton with pt>20GeV";
-  cutnames[3]="Lepton charge product ";
-  cutnames[4]="MET";
-  cutnames[5]="Inv Mass ";
+  std::string cutnames[7];
+  cutnames[0]="# # tot. events          : ";
+  cutnames[1]="# of Leptons > 1         : ";
+  cutnames[2]="one lepton with pt>20GeV : ";
+  cutnames[3]="Lepton charge product    : ";
+  cutnames[4]="MET                      : ";
+  cutnames[5]="Inv Mass                 : ";
+  cutnames[6]="All cuts                 : ";
   std::cout<<" =================================== "<<std::endl;
-  std::cout<<"  # tot. events     = "<<selectedEvents[0]<<std::endl;
-  for(int i=0; i<5; ++i) 
-	std::cout<<" #"<<i <<" "<< cutnames[i] <<  ": " << selectedEvents[i]<<std::endl;
-  std::cout<<" =================================== "<<std::endl;
-}
+  for(int i=0; i<7; ++i) 
+	std::cout<<" #"<<i <<" "<< cutnames[i] << selectedEvents[i]<<std::endl;
+  std::cout<<" =================================== "<<std::endl;}
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(HWWPreselectionMarker);
