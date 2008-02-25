@@ -1,0 +1,22 @@
+include "RecoEcal/EgammaClusterProducers/data/ecalClusteringSequence.cff"
+include "RecoEgamma/EgammaElectronProducers/data/pixelMatchGsfElectronSequence.cff"
+
+# --- electron identification ---
+include "EgammaAnalysis/ElectronIDESSources/data/likelihoodPdfsDB.cfi"
+include "EgammaAnalysis/ElectronIDESSources/data/likelihoodESetup.cfi"
+
+include "EgammaAnalysis/ElectronIDProducers/data/electronId.cfi"
+replace electronId.electronIDAssociationLabel = "electronId"
+replace electronId.doPtdrId = true
+replace electronId.doCutBased = false
+replace electronId.doLikelihood = true
+replace electronId.doNeuralNet = false
+
+sequence HWWElectronSequence = {
+
+    ecalClusteringSequence,
+    pixelMatchGsfElectronSequence,
+    electronId
+
+}
+
