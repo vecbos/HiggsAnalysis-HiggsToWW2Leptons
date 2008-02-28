@@ -8,6 +8,6 @@ module preselectionMarker = HWWPreselectionMarker {
   double LeptonPtMaxMin 	  = 20
   double LeptonEtaMax		  = 2.5
   double LeptonChargeCombination  = -1
-  double MetMin 		  = 5
+  double MetMin 		  = 30
   double InvMassMin		  = 12
 }

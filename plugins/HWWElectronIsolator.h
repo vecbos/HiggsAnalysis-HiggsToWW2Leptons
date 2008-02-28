@@ -35,10 +35,9 @@ class HWWElectronIsolator{
    std::vector<reco::PixelMatchGsfElectronRef> selected_;
    edm::InputTag tracksLabel_;
    edm::InputTag electronsLabel_;
+   edm::InputTag trckIsolationProducer_;
    bool doRefCheck_;
    edm::InputTag selectedElectronsRefLabel_;
-   double extRadius_;
-   double intRadius_;
    double theTrackIsolCut_; 
 };
 

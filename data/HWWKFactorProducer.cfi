@@ -2,7 +2,7 @@
 
 
 module KFactorProducer = HWWKFactorProducer {
-    untracked string inputFilename  = "HiggsAnalysis/HiggsToWW2Leptons/data/130.dat"
+    untracked string inputFilename  = "HiggsAnalysis/HiggsToWW2Leptons/data/165.dat"
     # PYTHIA Process to apply KFactor
     untracked int32 ProcessID = 102
     untracked bool Debug = 0
