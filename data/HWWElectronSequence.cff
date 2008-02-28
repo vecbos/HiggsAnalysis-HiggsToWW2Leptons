@@ -1,10 +1,4 @@
-include "RecoEcal/EgammaClusterProducers/data/ecalClusteringSequence.cff"
-include "RecoEgamma/EgammaElectronProducers/data/pixelMatchGsfElectronSequence.cff"
-
 # --- electron identification ---
-include "EgammaAnalysis/ElectronIDESSources/data/likelihoodPdfsDB.cfi"
-include "EgammaAnalysis/ElectronIDESSources/data/likelihoodESetup.cfi"
-
 include "EgammaAnalysis/ElectronIDProducers/data/electronId.cfi"
 replace electronId.electronIDAssociationLabel = "electronId"
 replace electronId.doPtdrId = true
@@ -14,7 +8,6 @@ replace electronId.doNeuralNet = false
 
 
 # --- electron isolation ---
-
 # tracker isolation module
 include "EgammaAnalysis/EgammaIsolationProducers/data/egammaElectronTkRelIsolation.cfi"
 replace egammaElectronTkRelIsolation.intRadius   = 0.015
@@ -32,8 +25,6 @@ include "EgammaAnalysis/EgammaIsolationProducers/data/egammaTowerIsolation.cfi"
 
 sequence HWWElectronSequence = {
 
-    ecalClusteringSequence,
-    pixelMatchGsfElectronSequence,
     egammaElectronTkRelIsolation,
     egammaTowerIsolation,
     electronId
