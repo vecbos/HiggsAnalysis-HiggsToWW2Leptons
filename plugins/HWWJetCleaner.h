@@ -42,7 +42,8 @@ public:
   const_iterator begin () const { return m_selected.begin () ; }
   const_iterator end () const { return m_selected.end () ; }
 
-  void select (edm::Handle<collection>, const edm::Event&) ;
+  void select (edm::Handle<collection>, const edm::Event&, 
+               const edm::EventSetup&);
 	
 private:
 	

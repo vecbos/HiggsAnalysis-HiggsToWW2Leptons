@@ -13,7 +13,7 @@
 //
 // Original Author:  Thomas Punz
 //         Created:  Fri Jan 25 17:54:06 CET 2008
-// $Id$
+// $Id: HWWMuonIsolator.cc,v 1.1 2008/02/14 16:06:59 ceballos Exp $
 //
 //
 
@@ -60,7 +60,9 @@ HWWMuonIsolator::~HWWMuonIsolator()
 }
 
 void
-HWWMuonIsolator::select(edm::Handle<reco::MuonCollection> muons, const edm::Event& iEvent)
+HWWMuonIsolator::select(edm::Handle<reco::MuonCollection> muons,
+                        const edm::Event& iEvent,
+		        const edm::EventSetup& iEventSetup)
 {
   using namespace edm;
   using namespace reco;

@@ -13,7 +13,7 @@
 //
 // Original Author:  Thomas Punz
 //         Created:  Wed Jan 30 11:13:18 CET 2008
-// $Id$
+// $Id: HWWElectronSelector.cc,v 1.1 2008/02/14 16:06:56 ceballos Exp $
 //
 //
 
@@ -48,7 +48,9 @@ HWWElectronSelector::~HWWElectronSelector()
 
 
 void
-HWWElectronSelector::select (edm::Handle<reco::PixelMatchGsfElectronCollection> electrons, const edm::Event& iEvent)
+HWWElectronSelector::select (edm::Handle<reco::PixelMatchGsfElectronCollection> electrons,
+                             const edm::Event& iEvent,
+		             const edm::EventSetup& iEventSetup)
 {
   using namespace edm;
   using namespace reco;

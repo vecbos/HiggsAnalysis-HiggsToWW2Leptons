@@ -23,7 +23,9 @@ HWWMuonSelector::~HWWMuonSelector()
 
 // ------------ method called to produce the data  ------------
 void
-HWWMuonSelector::select(edm::Handle<reco::MuonCollection> muons, const edm::Event& iEvent)
+HWWMuonSelector::select(edm::Handle<reco::MuonCollection> muons,
+                        const edm::Event& iEvent,
+                        const edm::EventSetup& iEventSetup)
 {
   using namespace edm;
   using namespace reco;

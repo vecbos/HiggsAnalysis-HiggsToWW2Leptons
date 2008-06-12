@@ -24,7 +24,8 @@ HWWJetCleaner::~HWWJetCleaner ()
 // ----------------------------------------------------------------------------
 void
 HWWJetCleaner::select (edm::Handle<HWWJetCleaner::collection> jetCollectionHandle,
-                       const edm::Event& iEvent)
+                       const edm::Event& iEvent,
+		       const edm::EventSetup& iEventSetup)
 {
   m_selected.clear () ;
 

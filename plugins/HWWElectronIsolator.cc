@@ -16,7 +16,9 @@ HWWElectronIsolator::~HWWElectronIsolator()
 {
 }
 
-void HWWElectronIsolator::select(edm::Handle<reco::PixelMatchGsfElectronCollection> electrons, const edm::Event& iEvent)
+void HWWElectronIsolator::select(edm::Handle<reco::PixelMatchGsfElectronCollection> electrons,
+                                 const edm::Event& iEvent,
+		                 const edm::EventSetup& iEventSetup)
 {
   using namespace edm;
   using namespace reco;
