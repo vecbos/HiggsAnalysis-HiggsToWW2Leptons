@@ -1,6 +1,8 @@
 #ifndef HWWMUONISOLATOR
 #define HWWMUONISOLATOR
 
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+
 class HWWMuonIsolator{
 public:
  explicit HWWMuonIsolator(const edm::ParameterSet&);

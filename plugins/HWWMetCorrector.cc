@@ -33,19 +33,19 @@ HWWMetCorrector::~HWWMetCorrector()
 void
 HWWMetCorrector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
- using namespace edm;
- using namespace std;
- using namespace reco;
+  using namespace edm;
+  using namespace std;
+  using namespace reco;
 
-// get met from CMSSW
+  // get met from CMSSW
   Handle<reco::CaloMETCollection> calomet;
   iEvent.getByLabel(caloMetLabel_,calomet);
 
-// For muon corrections get muons 
+  // For muon corrections get muons 
   Handle<reco::MuonCollection> muons;
   iEvent.getByLabel(muonLabel_,muons); 
 
-// define ethz collections to be stored
+  // define ethz collections to be stored
 
   auto_ptr<reco::CaloMETCollection> pOutMets (new reco::CaloMETCollection);
 
@@ -59,73 +59,96 @@ HWWMetCorrector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   for(reco::CaloMETCollection::const_iterator met=calomet->begin(); met != calomet->end(); ++met) {
 
-// first we check if we have to correct for muons
+    // first we check if we have to correct for muons
     if(muonCorrection_) {
       for(reco::MuonCollection::const_iterator muon=muons->begin(); muon != muons->end(); ++muon) {
-	if( muon->combinedMuon()->pt() > muonPtMin_ &&
-	 fabs(muon->combinedMuon()->eta()) < muonEtaMax_ &&
-	 fabs(muon->combinedMuon()->d0())  < muonTrackD0Max_ &&
-	 fabs(muon->combinedMuon()->dz())  < muonTrackDzMax_ && 
-         muon->combinedMuon()->numberOfValidHits() > muonNHitsMin_ ) {
-	   float dpt_track = muon->combinedMuon()->error(0)/(muon->combinedMuon()->qoverp());
-	   float chisq = muon->combinedMuon()->normalizedChi2();
-	   if (dpt_track < muonDPtMax_  && chisq < muonChiSqMax_) {
-	     DeltaPx +=  muon->px();
-	     DeltaPy +=  muon->py();
-	     DeltaSumET += muon->et();
-	     }
+	bool goodmuon = false;
 
-//----------- Calculate muon energy deposition in the calorimeters
+	TrackRef track;
+	bool hasTrackerTrack = false;
+	
+	if ( muon->track().isNonnull() ) {
+	  hasTrackerTrack = true;
+	  track = muon->get<TrackRef>();
+	}
+	
+	if ( hasTrackerTrack && &track != 0 ) {
+	  goodmuon = track->pt() > muonPtMin_ &&
+	    fabs(track->eta()) < muonEtaMax_ &&
+	    fabs(track->d0())  < muonTrackD0Max_ &&
+	    fabs(track->dz())  < muonTrackDzMax_ && 
+	    track->numberOfValidHits() > muonNHitsMin_;
+	} else {
+	  goodmuon = muon->pt() > muonPtMin_ &&
+	    fabs(muon->eta()) < muonEtaMax_;
+	}
+	if( goodmuon ) {
+	  bool goodtrackfit = false;
+	  if ( hasTrackerTrack && &track != 0 ) {
+	    std::cout << "goodmuon. xisting track. Taking it" << std::endl;
+	    float dpt_track = track->error(0)/(track->qoverp());
+	    float chisq = track->normalizedChi2();
+	    if (dpt_track < muonDPtMax_  && chisq < muonChiSqMax_) goodtrackfit = true;
+	    std::cout << "goodmuon. taken track." << std::endl;
+	  } else goodtrackfit = true;
+	  
+	  if ( goodtrackfit ) {
+	    DeltaPx +=  muon->px();
+	    DeltaPy +=  muon->py();
+	    DeltaSumET += muon->et();
+	  }
 
-            /*   if (muonDepositCor_) {
-              TrackRef mu_track = muon->combinedMuon();
-              TrackDetMatchInfo info =  trackAssociator.associate(iEvent, iSetup,trackAssociator.getFreeTrajectoryState(iSetup, *mu_track),
-              trackAssociatorParameters);
-             double ene = info.crossedEnergy(TrackDetMatchInfo::TowerTotal);
-             DeltaExDep += ene*sin((*mu_track).theta())*cos((*mu_track).phi());
-             DeltaEyDep += ene*sin((*mu_track).theta())*sin((*mu_track).phi());
-             DeltaSumETDep += ene*sin((*mu_track).theta());
-             }*/
+	  //----------- Calculate muon energy deposition in the calorimeters
+
+	  /*   if (muonDepositCor_) {
+	       TrackRef mu_track = muon->combinedMuon();
+	       TrackDetMatchInfo info =  trackAssociator.associate(iEvent, iSetup,trackAssociator.getFreeTrajectoryState(iSetup, *mu_track),
+	       trackAssociatorParameters);
+	       double ene = info.crossedEnergy(TrackDetMatchInfo::TowerTotal);
+	       DeltaExDep += ene*sin((*mu_track).theta())*cos((*mu_track).phi());
+	       DeltaEyDep += ene*sin((*mu_track).theta())*sin((*mu_track).phi());
+	       DeltaSumETDep += ene*sin((*mu_track).theta());
+	       }*/
         }
       }
     }
         						      
-//----------------- Calculate and set deltas for new MET correction
-     CorrMETData delta;
-     delta.mex     = - DeltaPx;  //correction to MET (from muons) is negative,    
-     delta.mey     = - DeltaPy;    //since MET points in direction of muons
-     delta.sumet   = DeltaSumET; 
-     delta.mex    += DeltaExDep;    //correction to MET (from muon depositions) is positive,	
-     delta.mey    += DeltaEyDep;    //since MET points in opposite direction of muons
-     delta.sumet  -= DeltaSumETDep;    
+    //----------------- Calculate and set deltas for new MET correction
+    CorrMETData delta;
+    delta.mex     = - DeltaPx;  //correction to MET (from muons) is negative,    
+    delta.mey     = - DeltaPy;    //since MET points in direction of muons
+    delta.sumet   = DeltaSumET; 
+    delta.mex    += DeltaExDep;    //correction to MET (from muon depositions) is positive,	
+    delta.mey    += DeltaEyDep;    //since MET points in opposite direction of muons
+    delta.sumet  -= DeltaSumETDep;    
      
-//----------------- Fill holder with corrected MET (= uncorrected + delta) values
+    //----------------- Fill holder with corrected MET (= uncorrected + delta) values
 
-     double CorrPx = met->px()+delta.mex;
-     double CorrPy = met->py()+delta.mey;
-     double CorrSumEt = met->sumEt()+delta.sumet;
+    double CorrPx = met->px()+delta.mex;
+    double CorrPy = met->py()+delta.mey;
+    double CorrSumEt = met->sumEt()+delta.sumet;
 
-     double CorrPt=sqrt(CorrPx*CorrPx+CorrPy*CorrPy);
+    double CorrPt=sqrt(CorrPx*CorrPx+CorrPy*CorrPy);
   
-     //     if(CorrPt < corrmetMin_) continue;
+    //     if(CorrPt < corrmetMin_) continue;
      
-     LorentzVector p4(CorrPx,CorrPy,0,sqrt(CorrPt*CorrPt));
+    LorentzVector p4(CorrPx,CorrPy,0,sqrt(CorrPt*CorrPt));
 
-//----------------- get previous corrections and push into new corrections 
+    //----------------- get previous corrections and push into new corrections 
 
-     std::vector<CorrMETData> corrections = met->mEtCorr();
-     corrections.push_back( delta );
+    std::vector<CorrMETData> corrections = met->mEtCorr();
+    corrections.push_back( delta );
 
-//----------------- Push onto MET Collection
+    //----------------- Push onto MET Collection
 
-     reco::CaloMET* MET = new reco::CaloMET(met->getSpecific(), CorrSumEt,corrections, p4, met->vertex());
+    reco::CaloMET* MET = new reco::CaloMET(met->getSpecific(), CorrSumEt,corrections, p4, met->vertex());
 
-     pOutMets->push_back(*MET);
+    pOutMets->push_back(*MET);
 
-     iEvent.put(pOutMets,"");
+    iEvent.put(pOutMets,"");
 
-     delete MET;
-   }
+    delete MET;
+  }
 }
 
 // ------------ method called once each job just before starting event loop  ------------

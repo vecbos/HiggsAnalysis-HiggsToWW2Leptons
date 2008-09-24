@@ -1,9 +1,11 @@
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWPreselectionMarker.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/TrackReco/interface/Track.h"
-#include "DataFormats/MuonReco/interface/MuIsoDeposit.h"
+#include "DataFormats/METReco/interface/CaloMETFwd.h"
 #include "DataFormats/METReco/interface/CaloMET.h"
-#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/JetReco/interface/CaloJetCollection.h"
 #include <iostream>
 
@@ -42,7 +44,7 @@ void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& i
 	using namespace std;
 
         Handle<MuonCollection> muons;
-        Handle<PixelMatchGsfElectronCollection> electrons;
+        Handle<GsfElectronCollection> electrons;
         Handle<CaloMETCollection> met;
         Handle<CaloJetCollection> jets;		
         std::auto_ptr<bool> pOut(new bool);
@@ -56,7 +58,7 @@ void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& i
 
 
 	//  ----- Lepton selection 
-        PixelMatchGsfElectronCollection::const_iterator electron;
+        GsfElectronCollection::const_iterator electron;
         for(electron=electrons->begin(); electron != electrons->end(); electron++)
         {
 	  if(electron->pt()>=leptonPtMinMin_ && fabs(electron->eta())<=leptonEtaMax_)

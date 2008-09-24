@@ -13,7 +13,7 @@
 //
 // Original Author:  Thomas Punz
 //         Created:  Fri Jan 25 17:54:06 CET 2008
-// $Id: HWWMuonIsolator.cc,v 1.1 2008/02/14 16:06:59 ceballos Exp $
+// $Id: HWWMuonIsolator.cc,v 1.2 2008/06/12 14:38:52 ceballos Exp $
 //
 //
 
@@ -32,8 +32,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/TrackReco/interface/Track.h"
-#include "DataFormats/MuonReco/interface/MuIsoDeposit.h"
-
+#include "DataFormats/RecoCandidate/interface/IsoDeposit.h"
 
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWMuonIsolator.h"
 
@@ -85,9 +84,9 @@ HWWMuonIsolator::select(edm::Handle<reco::MuonCollection> muons,
   	  muTrackIsol = false;
   	  muCaloIsol = false;
   	  
-  	  muonTrackerDeposit30= (*muons)[i].getIsolationR03().sumPt;   
-  	  muonEcalDeposit30   = (*muons)[i].getIsolationR03().emEt;   
-  	  muonHcalDeposit30   = (*muons)[i].getIsolationR03().hadEt; 
+  	  muonTrackerDeposit30= (*muons)[i].isolationR03().sumPt;   
+  	  muonEcalDeposit30   = (*muons)[i].isolationR03().emEt;   
+  	  muonHcalDeposit30   = (*muons)[i].isolationR03().hadEt; 
   	  
   	  // *** tracker isolation cut
   	  if(muonTrackerDeposit30 < theTrackIsolCut){ muTrackIsol = true;}

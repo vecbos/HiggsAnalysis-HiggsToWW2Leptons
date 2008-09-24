@@ -20,8 +20,8 @@
 #define EleTrackerIsolationAlgo_h
 
 // my includes
-#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectron.h"
-#include "DataFormats/EgammaCandidates/interface/PixelMatchGsfElectronFwd.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackBase.h"
 #include "DataFormats/TrackReco/interface/TrackExtra.h"
@@ -42,7 +42,7 @@ class EleTrackerIsolationAlgo{
   
   //constructors
   EleTrackerIsolationAlgo();
-  EleTrackerIsolationAlgo(const PixelMatchGsfElectron *gsfEle, const TrackCollection trackColl);
+  EleTrackerIsolationAlgo(const GsfElectron *gsfEle, const TrackCollection trackColl);
 
   //methods
   void setExtRadius (float extRadius);
@@ -58,7 +58,7 @@ class EleTrackerIsolationAlgo{
   
  private:
 
-  const PixelMatchGsfElectron*_myGsfEle;  	  
+  const GsfElectron*_myGsfEle;  	  
   const TrackCollection _tracks;
   
   float _extRadius;
