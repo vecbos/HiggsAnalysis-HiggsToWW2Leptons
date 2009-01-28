@@ -29,18 +29,19 @@ void HWWElectronIsolator::select(edm::Handle<reco::GsfElectronCollection> electr
   Handle<RefVector<GsfElectronCollection> > electronsRef;
 
 
-  edm::Handle< reco::CandViewDoubleAssociations > tkIsolationHandle;
+  edm::Handle< edm::ValueMap<double> > tkIsolationHandle;
   try { iEvent.getByLabel(trackIsolationProducer_, tkIsolationHandle); }
   catch ( cms::Exception& ex ) { printf("Can't get tracker isolation product\n"); }
+
+  const edm::ValueMap<double>& tkIsolationVal = *tkIsolationHandle;
 
   if(doRefCheck_==true)
     iEvent.getByLabel(selectedElectronsRefLabel_,electronsRef);
 
   for(unsigned i =0; i<electrons->size(); i++) {
     
-    double sumPtOverEt = (*tkIsolationHandle)[i].second;
-
     Ref<reco::GsfElectronCollection> electronRAWRef(electrons,i);
+    double sumPtOverEt = tkIsolationVal[electronRAWRef];
      
     bool selected=true;
     if(doRefCheck_==true) {
