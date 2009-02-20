@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 preselectionMarker = cms.EDProducer("HWWPreselectionMarker",
-                                    ElectronLabel = cms.InputTag("selectedElectrons"),
+                                    ElectronLabel = cms.InputTag("isolatedElectrons"),
                                     MuonLabel = cms.InputTag("isolatedMuons"),
                                     JetLabel = cms.InputTag("iterativeCone5CaloJets"),
                                     CaloMetLabel = cms.InputTag("muonCorrectedMET"),
