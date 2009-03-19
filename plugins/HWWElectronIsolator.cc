@@ -41,7 +41,7 @@ void HWWElectronIsolator::select(edm::Handle<reco::GsfElectronCollection> electr
   for(unsigned i =0; i<electrons->size(); i++) {
     
     Ref<reco::GsfElectronCollection> electronRAWRef(electrons,i);
-    double sumPtOverEt = tkIsolationVal[electronRAWRef];
+    double sumPt = tkIsolationVal[electronRAWRef];
      
     bool selected=true;
     if(doRefCheck_==true) {
@@ -50,7 +50,7 @@ void HWWElectronIsolator::select(edm::Handle<reco::GsfElectronCollection> electr
       }
     }
 
-    if (sumPtOverEt < theTrackIsolCut_ && selected==true)
+    if (sumPt < theTrackIsolCut_ && selected==true)
       selected_.push_back(electronRAWRef);
   }
 }
