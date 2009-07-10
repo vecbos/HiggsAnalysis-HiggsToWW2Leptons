@@ -85,11 +85,9 @@ HWWMetCorrector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	if( goodmuon ) {
 	  bool goodtrackfit = false;
 	  if ( hasTrackerTrack && &track != 0 ) {
-	    std::cout << "goodmuon. xisting track. Taking it" << std::endl;
 	    float dpt_track = track->error(0)/(track->qoverp());
 	    float chisq = track->normalizedChi2();
 	    if (dpt_track < muonDPtMax_  && chisq < muonChiSqMax_) goodtrackfit = true;
-	    std::cout << "goodmuon. taken track." << std::endl;
 	  } else goodtrackfit = true;
 	  
 	  if ( goodtrackfit ) {
