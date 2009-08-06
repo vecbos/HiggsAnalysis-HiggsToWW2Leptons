@@ -1,5 +1,5 @@
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/EleTrackerIsolationAlgo.h"
-#include "DataFormats/EgammaCandidates/interface/GsfElectronIsoCollection.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/Candidate/interface/CandAssociation.h"
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWElectronIsolator.h"
 

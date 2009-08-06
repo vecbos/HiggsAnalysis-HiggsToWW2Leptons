@@ -1,5 +1,5 @@
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWUtils.h"
-#include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
 #include <iostream>
 
 void setMomentum (TLorentzVector & myvector, const reco::Candidate & gen)

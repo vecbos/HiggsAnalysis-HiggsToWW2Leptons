@@ -1,9 +1,10 @@
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/EleTrackerIsolationAlgo.h"
 
 using namespace std;
 EleTrackerIsolationAlgo::EleTrackerIsolationAlgo (){}
 
-EleTrackerIsolationAlgo::EleTrackerIsolationAlgo (const PixelMatchGsfElectron *gsfEle, const TrackCollection trackColl) : 
+EleTrackerIsolationAlgo::EleTrackerIsolationAlgo (const GsfElectron *gsfEle, const TrackCollection trackColl) : 
   _myGsfEle(gsfEle),
   _tracks(trackColl)   
 {

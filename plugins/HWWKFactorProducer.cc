@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Joanna Weng
 //         Created:  Fri Feb  1 15:30:42 CET 2008
-// $Id: HWWKFactorProducer.cc,v 1.1 2008/02/21 10:42:30 weng Exp $
+// $Id: HWWKFactorProducer.cc,v 1.2 2009/03/18 12:00:52 fabstoec Exp $
 //
 //
 
@@ -35,11 +35,7 @@ Implementation:
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 
-#include "HepMC/WeightContainer.h"
-#include "HepMC/GenEvent.h"
-#include "HepMC/GenParticle.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
-#include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -73,7 +69,7 @@ void HWWKFactorProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
 {
   using namespace edm;
   // get HepMC::GenEvent ...
-  Handle<HepMCProduct> evt_h;
+  Handle<edm::HepMCProduct> evt_h;
   iEvent.getByType(evt_h);
   
   // get process id;  Does not work -> Ask Guillelmo?
