@@ -25,9 +25,6 @@ class HWWElectronSelector  {
  private:
 
   edm::InputTag electronIdCutsLabel_;
-  edm::InputTag electronIdLikelihoodLabel_;
-  bool useCuts_;
-  double likelihoodThreshold_;
 
   std::vector<reco::GsfElectronRef> selected_ ;
 

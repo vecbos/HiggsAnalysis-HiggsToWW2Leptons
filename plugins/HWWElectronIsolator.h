@@ -35,12 +35,8 @@ class HWWElectronIsolator{
 	
  private:	
    std::vector<reco::GsfElectronRef> selected_;
-   edm::InputTag tracksLabel_;
-   edm::InputTag electronsLabel_;
-   edm::InputTag trackIsolationProducer_;
-   bool doRefCheck_;
-   edm::InputTag selectedElectronsRefLabel_;
    double theTrackIsolCut_; 
+   bool absolute_;
 };
 
 

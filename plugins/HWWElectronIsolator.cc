@@ -6,10 +6,8 @@
 
 HWWElectronIsolator::HWWElectronIsolator(const edm::ParameterSet& iConfig)
 {
-  selectedElectronsRefLabel_ = iConfig.getParameter<InputTag>("SelectedElectronRefCollectionLabel");
-  trackIsolationProducer_    = iConfig.getParameter<InputTag>("TrackIsolationProducerLabel");
-  doRefCheck_		     = iConfig.getParameter<bool>("doRefCheck");
   theTrackIsolCut_	     = iConfig.getParameter<double>("TrackIsolCut");
+  absolute_                  = iConfig.getParameter<bool>("absolute");
 }
 
 
@@ -25,32 +23,23 @@ void HWWElectronIsolator::select(edm::Handle<reco::GsfElectronCollection> electr
   using namespace reco;
   using namespace std;
 
+  if ( !absolute_ && theTrackIsolCut_ > 1.0 ) {
+    LogWarning("HWWElectronIsolator") << "Requested relative electron tracker isolation with cut: " 
+                                      << theTrackIsolCut_ << " > 1.0. Possible misconfiguration...";
+  }
+
   selected_.clear();
-  Handle<RefVector<GsfElectronCollection> > electronsRef;
-
-
-  edm::Handle< edm::ValueMap<double> > tkIsolationHandle;
-  try { iEvent.getByLabel(trackIsolationProducer_, tkIsolationHandle); }
-  catch ( cms::Exception& ex ) { printf("Can't get tracker isolation product\n"); }
-
-  const edm::ValueMap<double>& tkIsolationVal = *tkIsolationHandle;
-
-  if(doRefCheck_==true)
-    iEvent.getByLabel(selectedElectronsRefLabel_,electronsRef);
-
+  
   for(unsigned i =0; i<electrons->size(); i++) {
     
-    Ref<reco::GsfElectronCollection> electronRAWRef(electrons,i);
-    double sumPt = tkIsolationVal[electronRAWRef];
-     
-    bool selected=true;
-    if(doRefCheck_==true) {
-      if (find(electronsRef->begin(), electronsRef->end(),electronRAWRef)==electronsRef->end()) {
-	selected=false;
-      }
-    }
+    Ref<reco::GsfElectronCollection> electronRef(electrons,i);
+    double pt = electronRef->pt();
+    double sumPt = electronRef->dr04TkSumPt();
+    
+    if ( !absolute_ && pt != 0 ) sumPt = sumPt/pt;
+    
+    if ( sumPt < theTrackIsolCut_ ) selected_.push_back(electronRef);
 
-    if (sumPt < theTrackIsolCut_ && selected==true)
-      selected_.push_back(electronRAWRef);
   }
+
 }

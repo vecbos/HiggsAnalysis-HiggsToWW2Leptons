@@ -17,7 +17,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 process.source = cms.Source("PoolSource",
                             debugFlag = cms.untracked.bool(True),
                             debugVebosity = cms.untracked.uint32(10),
-                            fileNames = cms.untracked.vstring('rfio:/castor/cern.ch/user/e/emanuele/RECO/relval_Zee_CMSSW_2_1_7.root')
+                            fileNames = cms.untracked.vstring('rfio:/castor/cern.ch/user/e/emanuele/RECO/Zprime_31X.root')
                             )
 
 process.TFileService = cms.Service("TFileService",
@@ -30,7 +30,7 @@ process.out = cms.OutputModule("PoolOutputModule",
                                outputCommands = cms.untracked.vstring('drop *',
                                                                       'keep *_*_*_HWWPreselection',
                                                                       'keep *_muons_*_*',
-                                                                      'keep *_pixelMatchGsfElectrons_*_*'
+                                                                      'keep *_gsfElectrons_*_*'
                                                                       )
                                )
 

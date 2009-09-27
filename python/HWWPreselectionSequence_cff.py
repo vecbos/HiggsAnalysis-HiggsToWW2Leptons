@@ -5,8 +5,6 @@ from HiggsAnalysis.HiggsToWW2Leptons.HWWMuonIsolator_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWMuonIsolatorRef_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWMuonSelector_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWMuonSelectorRef_cfi import *
-from HiggsAnalysis.HiggsToWW2Leptons.HWWElectronIdSequence_cff import *
-from HiggsAnalysis.HiggsToWW2Leptons.HWWElectronIsolationSequence_cff import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWElectronIsolator_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWElectronIsolatorRef_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWElectronSelector_cfi import *
@@ -19,8 +17,6 @@ higgsToWW2LeptonsPreselectionSequence = cms.Sequence(
     selectedMuonsRef *
     isolatedMuons *
     isolatedMuonsRef *
-    HWWElectronIdSequence *
-    HWWElectronIsolationSequence *
     selectedElectrons *
     selectedElectronsRef *
     isolatedElectrons *
