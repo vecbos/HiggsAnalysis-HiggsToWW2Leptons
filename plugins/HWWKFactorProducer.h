@@ -12,14 +12,13 @@
 #include "HepMC/WeightContainer.h"
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenParticle.h"
-#include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
+
+#include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWKFactorList.h"
 #include "TH1D.h"
 #include "TFile.h"
-
-#include <vector>
 
 //
 // class decleration
@@ -40,11 +39,8 @@ class HWWKFactorProducer : public edm::EDProducer {
      
   std::string inputFilename_;
   int  processID_;
-  std::vector<int> altProcessID_;
   HWWKfactorList* pt_histo_;
   bool debug_;
-  // use NNLO for alternative Kfactors?
-  bool useNNLO_;
 };
 
 #endif
