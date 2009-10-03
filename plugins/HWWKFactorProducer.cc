@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Joanna Weng
 //         Created:  Fri Feb  1 15:30:42 CET 2008
-// $Id: HWWKFactorProducer.cc,v 1.1 2008/02/21 10:42:30 weng Exp $
+// $Id: HWWKFactorProducer.cc,v 1.4 2009/10/03 11:12:29 ceballos Exp $
 //
 //
 
@@ -39,7 +39,6 @@ Implementation:
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenParticle.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
-#include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
 
 #include "TH1D.h"
 #include "TFile.h"

@@ -13,7 +13,7 @@
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenParticle.h"
 
-#include "SimDataFormats/HepMCProduct/interface/HepMCProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
 
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWKFactorList.h"
