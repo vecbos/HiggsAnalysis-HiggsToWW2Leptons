@@ -5,6 +5,10 @@ process = cms.Process("HWWJetCleanerTest")
 process.load("HiggsAnalysis.HiggsToWW2Leptons.HWWJetCleaner_cfi")
 process.load("HiggsAnalysis.HiggsToWW2Leptons.HWWJetCleanerRef_cfi")
 
+process.options = cms.untracked.PSet(
+    fileMode =  cms.untracked.string('NOMERGE')
+    )
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 process.source = cms.Source("PoolSource",

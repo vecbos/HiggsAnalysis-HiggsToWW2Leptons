@@ -12,6 +12,10 @@ process.load('Configuration/StandardSequences/Reconstruction_cff')
 
 process.load("HiggsAnalysis.HiggsToWW2Leptons.HWWPreselectionSequence_cff")
 
+process.options = cms.untracked.PSet(
+    fileMode =  cms.untracked.string('NOMERGE')
+    )
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 process.source = cms.Source("PoolSource",

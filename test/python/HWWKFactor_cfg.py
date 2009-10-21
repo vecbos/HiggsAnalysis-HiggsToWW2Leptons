@@ -4,6 +4,10 @@ process = cms.Process("HWWKFactorProduction")
 
 process.load("HiggsAnalysis.HiggsToWW2Leptons.HWWKFactorProducer_cfi")
 
+process.options = cms.untracked.PSet(
+    fileMode =  cms.untracked.string('NOMERGE')
+    )
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 process.source = cms.Source("PoolSource",
