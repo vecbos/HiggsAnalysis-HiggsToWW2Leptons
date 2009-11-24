@@ -1,5 +1,6 @@
 #include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/EleTrackerIsolationAlgo.h"
+#include "CLHEP/Vector/ThreeVector.h"
 
 using namespace std;
 EleTrackerIsolationAlgo::EleTrackerIsolationAlgo (){}
@@ -24,13 +25,13 @@ float EleTrackerIsolationAlgo::getPtTracks () const
 {
   float dummyPt = 0 ;
 
-  Hep3Vector elePAtVtx(_myGsfEle->px(), _myGsfEle->py(), _myGsfEle->pz()); 
+  CLHEP::Hep3Vector elePAtVtx(_myGsfEle->px(), _myGsfEle->py(), _myGsfEle->pz()); 
   float ele_pt  = _myGsfEle->pt();
   float ele_lip = _myGsfEle->vz();   
 
   for(TrackCollection::const_iterator this_track = _tracks.begin(); this_track != _tracks.end(); this_track++ ){ 
     
-    Hep3Vector trackPAtVtx(this_track->px(),this_track->py(),this_track->pz());
+    CLHEP::Hep3Vector trackPAtVtx(this_track->px(),this_track->py(),this_track->pz());
     float this_pt  = trackPAtVtx.perp();
 
     // only tracks from the same vertex as the electron
@@ -53,11 +54,11 @@ float EleTrackerIsolationAlgo::minDeltaR(float minPt) const
 {
   float minDR = 100000. ;
 
-  Hep3Vector elePAtVtx(_myGsfEle->px(), _myGsfEle->py(), _myGsfEle->pz()); 
+  CLHEP::Hep3Vector elePAtVtx(_myGsfEle->px(), _myGsfEle->py(), _myGsfEle->pz()); 
   float ele_lip = _myGsfEle->vz();   
 
   for(TrackCollection::const_iterator this_track = _tracks.begin(); this_track != _tracks.end(); this_track++ ){ 
-    Hep3Vector trackPAtVtx(this_track->px(),this_track->py(),this_track->pz());
+    CLHEP::Hep3Vector trackPAtVtx(this_track->px(),this_track->py(),this_track->pz());
     float this_pt  = trackPAtVtx.perp();
 
     if (this_pt < minPt){ continue;} 
@@ -79,12 +80,12 @@ float EleTrackerIsolationAlgo::minDeltaR_withVeto(float minPt) const
 {
   float minDR = 100000. ;
 
-  Hep3Vector elePAtVtx(_myGsfEle->px(), _myGsfEle->py(), _myGsfEle->pz()); 
+  CLHEP::Hep3Vector elePAtVtx(_myGsfEle->px(), _myGsfEle->py(), _myGsfEle->pz()); 
   float ele_lip = _myGsfEle->vz();   
 
   for(TrackCollection::const_iterator this_track = _tracks.begin(); this_track != _tracks.end(); this_track++ ){ 
     
-    Hep3Vector trackPAtVtx(this_track->px(),this_track->py(),this_track->pz());
+    CLHEP::Hep3Vector trackPAtVtx(this_track->px(),this_track->py(),this_track->pz());
     float this_pt  = trackPAtVtx.perp();
     if (this_pt < minPt){ continue;} 
 
