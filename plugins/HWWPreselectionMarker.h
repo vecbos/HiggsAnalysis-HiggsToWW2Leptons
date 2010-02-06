@@ -11,8 +11,6 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/ParameterSet/interface/InputTag.h"
 
-
-
 class HWWPreselectionMarker : public edm::EDProducer {
 public:
   explicit HWWPreselectionMarker(const edm::ParameterSet&);

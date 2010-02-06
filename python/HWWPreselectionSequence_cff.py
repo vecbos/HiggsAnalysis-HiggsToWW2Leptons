@@ -1,5 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
+from HiggsAnalysis.Skimming.higgsToWW2Leptons_HLTPaths_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWMetCorrector_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWMuonIsolator_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWMuonIsolatorRef_cfi import *
@@ -12,15 +13,16 @@ from HiggsAnalysis.HiggsToWW2Leptons.HWWElectronSelectorRef_cfi import *
 from HiggsAnalysis.HiggsToWW2Leptons.HWWPreselectionMarker_cfi import *
 
 higgsToWW2LeptonsPreselectionSequence = cms.Sequence(
-    muonCorrectedMET *
+    higgsToWW2LeptonsHLTFilter*
+    #muonCorrectedMET *
     selectedMuons *
-    selectedMuonsRef *
+    #selectedMuonsRef *
     isolatedMuons *
-    isolatedMuonsRef *
+    #isolatedMuonsRef *
     selectedElectrons *
-    selectedElectronsRef *
+    #selectedElectronsRef *
     isolatedElectrons *
-    isolatedElectronsRef *
+    #isolatedElectronsRef *
     preselectionMarker
     )
     

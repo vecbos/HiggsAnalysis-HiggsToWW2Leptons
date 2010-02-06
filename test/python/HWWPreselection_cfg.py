@@ -16,12 +16,12 @@ process.options = cms.untracked.PSet(
     fileMode =  cms.untracked.string('NOMERGE')
     )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
 process.source = cms.Source("PoolSource",
                             debugFlag = cms.untracked.bool(True),
                             debugVebosity = cms.untracked.uint32(10),
-                            fileNames = cms.untracked.vstring('rfio:/castor/cern.ch/user/e/emanuele/RECO/Zprime_31X.root')
+                            fileNames = cms.untracked.vstring('file:/server/01a/ceballos/samples/HWW160_31x_01.root')
                             )
 
 process.TFileService = cms.Service("TFileService",
@@ -38,9 +38,6 @@ process.out = cms.OutputModule("PoolOutputModule",
                                                                       )
                                )
 
-
 process.p = cms.Path ( process.higgsToWW2LeptonsPreselectionSequence )
 
 process.o = cms.EndPath ( process.out )
-
-

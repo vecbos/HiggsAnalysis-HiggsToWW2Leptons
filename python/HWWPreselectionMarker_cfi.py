@@ -3,9 +3,8 @@ import FWCore.ParameterSet.Config as cms
 preselectionMarker = cms.EDProducer("HWWPreselectionMarker",
                                     ElectronLabel = cms.InputTag("isolatedElectrons"),
                                     MuonLabel = cms.InputTag("isolatedMuons"),
-                                    JetLabel = cms.InputTag("iterativeCone5CaloJets"),
-                                    CaloMetLabel = cms.InputTag("muonCorrectedMET"),
-
+                                    JetLabel = cms.InputTag("ak5CaloJets"),
+                                    MetLabel = cms.InputTag("tcMet"),
                                     LeptonPtMinMin = cms.double(10.0),
                                     LeptonPtMaxMin = cms.double(20.0),
                                     LeptonEtaMax = cms.double(2.5),
