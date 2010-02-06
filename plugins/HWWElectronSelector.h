@@ -24,7 +24,11 @@ class HWWElectronSelector  {
   // ----------member data ---------------------------
  private:
 
-  edm::InputTag electronIdCutsLabel_;
+  double hoverCut_;
+  double sigmaetaetaEBCut_;
+  double sigmaetaetaEECut_;
+  double deltaphiinCut_;
+  double deltaetainCut_;
 
   std::vector<reco::GsfElectronRef> selected_ ;
 

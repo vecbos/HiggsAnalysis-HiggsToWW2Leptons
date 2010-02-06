@@ -4,25 +4,24 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/METReco/interface/CaloMETFwd.h"
 #include "DataFormats/METReco/interface/CaloMET.h"
+#include "DataFormats/METReco/interface/METFwd.h"
+#include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/JetReco/interface/CaloJetCollection.h"
 #include <iostream>
 
-
-
 HWWPreselectionMarker::HWWPreselectionMarker(const edm::ParameterSet& iConfig)
 {
 	using namespace edm;
 	using namespace reco;
-
 	
 	muonslabel_=iConfig.getParameter<InputTag>( "MuonLabel");
 	electronslabel_=iConfig.getParameter<InputTag>( "ElectronLabel");
-	calometlabel_=iConfig.getParameter<InputTag>( "CaloMetLabel");
+	metlabel_=iConfig.getParameter<InputTag>( "MetLabel");
 	jetslabel_=iConfig.getParameter<InputTag>( "JetLabel");
 	
-	leptonPtMinMin_=iConfig.getParameter<double>("LeptonPtMinMin");        
+	leptonPtMinMin_=iConfig.getParameter<double>("LeptonPtMinMin");
 	leptonPtMaxMin_=iConfig.getParameter<double>("LeptonPtMaxMin");        
 	leptonEtaMax_=iConfig.getParameter<double>("LeptonEtaMax");      
 	leptonChargeCombination_=iConfig.getParameter<double>("LeptonChargeCombination");  
@@ -31,11 +30,9 @@ HWWPreselectionMarker::HWWPreselectionMarker(const edm::ParameterSet& iConfig)
 	produces<bool>();
 }
 
-
 HWWPreselectionMarker::~HWWPreselectionMarker()
 {
 }
-
 
 void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {       
@@ -45,17 +42,16 @@ void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& i
 
         Handle<MuonCollection> muons;
         Handle<GsfElectronCollection> electrons;
-        Handle<CaloMETCollection> met;
+        Handle<METCollection> met;
         Handle<CaloJetCollection> jets;		
         std::auto_ptr<bool> pOut(new bool);
         *pOut=true;
         
         iEvent.getByLabel(muonslabel_, muons);
         iEvent.getByLabel(electronslabel_, electrons);
-        iEvent.getByLabel(calometlabel_, met);
+        iEvent.getByLabel(metlabel_, met);
         iEvent.getByLabel(jetslabel_, jets);
         std::vector<const RecoCandidate*> leptons;
-
 
 	//  ----- Lepton selection 
         GsfElectronCollection::const_iterator electron;
@@ -90,16 +86,10 @@ void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& i
 	  const RecoCandidate *lepton1 = leptons[0];
 	  const RecoCandidate *lepton2 = leptons[1];
 
+          //choose hardest leptons as lepton1 and lepton
 	  if(leptons.size() > 2) {
-
-	   
-
 	    std::vector<const RecoCandidate*>::const_iterator lepton;
-
 	    for(lepton=leptons.begin(); lepton != leptons.end(); lepton++){
-	      
-	      //choose hardest leptons as lepton1 and lepton
-
 	      if((*lepton)->pt() > lepton1->pt()) {
 		if((*lepton)->pt() > lepton2->pt()) {
 		  if(lepton1->pt() > lepton2->pt() && (*lepton)->pt()!=lepton1->pt()) lepton2 =(*lepton);
@@ -123,35 +113,32 @@ void HWWPreselectionMarker::produce(edm::Event& iEvent, const edm::EventSetup& i
 	  else selectedEvents[3]++;                
 	  
 	  //met cut  
-	  reco::CaloMETCollection::const_iterator met_iter;
+	  reco::METCollection::const_iterator met_iter;
 	  for(met_iter=met->begin(); met_iter != met->end(); met_iter++)
 	    {
 	      if(met_iter->pt() < metMin_)
 		*pOut=false;
-	  else selectedEvents[4]++;
+	      else selectedEvents[4]++;
 	    }
 
-	  // invariant mass cut                
+	  // invariant mass cut (lepton mass is neglected)               
 	  double entot = lepton1->energy()+lepton2->energy();
 	  double pxtot = lepton1->px()+lepton2->px();
 	  double pytot = lepton1->py()+lepton2->py();
 	  double pztot = lepton1->pz()+lepton2->pz();
 	  double inmass = entot*entot - pxtot*pxtot - pytot*pytot - pztot*pztot;
-	  double inmass_sqrt=sqrt(inmass);                
+	  double inmass_sqrt=sqrt(inmass);
 	  if(inmass_sqrt<invMassMin_)*pOut=false;
-	  else selectedEvents[5]++;    
+	  else selectedEvents[5]++;
 	}
         if(*pOut==true) selectedEvents[6]++;
-        iEvent.put(pOut);       
+        iEvent.put(pOut);
 }
-
 
 void HWWPreselectionMarker::beginJob(const edm::EventSetup&)
 {
-	for(int i=0;i<7;i++)
-	  selectedEvents[i]=0;	
+  for(int i=0;i<7;i++) selectedEvents[i]=0;
 }
-
 
 void HWWPreselectionMarker::endJob() {
   std::string cutnames[7];

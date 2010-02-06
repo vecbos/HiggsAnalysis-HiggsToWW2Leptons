@@ -20,18 +20,9 @@ public:
  void select(edm::Handle<reco::MuonCollection>,const edm::Event&, 
              const edm::EventSetup&);
 private:
-		
- // ----------member data ---------------------------
-	
- edm::InputTag theMuonLabel;
- edm::InputTag theTrackerIsoDepositLabel;
- edm::InputTag theEcalIsoDepositLabel;
- edm::InputTag theHcalIsoDepositLabel;
- bool doRefCheck_;
- edm::InputTag selectedMuonsRefLabel_;
- std::vector<reco::MuonRef> selected_;
- double theTrackIsolCut;
- double theCaloIsolCut;
+   std::vector<reco::MuonRef> selected_;
+   double theTrackIsolCut_; 
+   bool absolute_;
 };
 
 

@@ -26,7 +26,7 @@ private:
   // ----------member data ---------------------------
   edm::InputTag muonslabel_;
   edm::InputTag electronslabel_;
-  edm::InputTag calometlabel_;
+  edm::InputTag metlabel_;
   edm::InputTag jetslabel_;
 
   double leptonPtMinMin_;

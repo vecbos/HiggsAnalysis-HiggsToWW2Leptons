@@ -30,7 +30,6 @@ class HWWMuonSelector  {
  // ----------member data ---------------------------
  
   std::vector<reco::MuonRef> selected_;
- edm::InputTag muonLabel_;
  double muonPtMin_;
  double muonEtaMax_;
 

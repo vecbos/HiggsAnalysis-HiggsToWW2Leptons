@@ -7,7 +7,6 @@
 HWWMuonSelector::HWWMuonSelector(const edm::ParameterSet& iConfig)
 {
 
- // muonLabel_                 = iConfig.getParameter<edm::InputTag>("MuonLabel");
  muonPtMin_		    = iConfig.getParameter<double>("MuonPtMin");
  muonEtaMax_		    = iConfig.getParameter<double>("MuonEtaMax");
 
@@ -30,21 +29,17 @@ HWWMuonSelector::select(edm::Handle<reco::MuonCollection> muons,
   using namespace edm;
   using namespace reco;
   selected_.clear();
-//	iEvent.getByLabel(muonLabel_,muons);
-
-  //std::auto_ptr<reco::MuonCollection> pOutMuons(new reco::MuonCollection);
 
   for(unsigned int i=0; i<muons->size();i++)
   {
-  	  if((*muons)[i].pt()<=muonPtMin_ || fabs((*muons)[i].eta())>=muonEtaMax_) 
-  		  continue;
-  	  Ref<MuonCollection> muonRef(muons,i);
-  	  selected_.push_back(muonRef);
 
-  //	  pOutMuons->push_back(*iter); 
+    if((*muons)[i].pt()<=muonPtMin_ || fabs((*muons)[i].eta())>=muonEtaMax_) 
+        continue;
+    Ref<MuonCollection> muonRef(muons,i);
+    selected_.push_back(muonRef);
+
   }
-	
- //   iEvent.put(pOutMuons,"");
+
 }
 
 //define this as a plug-in

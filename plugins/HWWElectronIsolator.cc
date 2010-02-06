@@ -6,7 +6,7 @@
 
 HWWElectronIsolator::HWWElectronIsolator(const edm::ParameterSet& iConfig)
 {
-  theTrackIsolCut_	     = iConfig.getParameter<double>("TrackIsolCut");
+  theTrackIsolCut_	     = iConfig.getParameter<double>("trackIsolCut");
   absolute_                  = iConfig.getParameter<bool>("absolute");
 }
 

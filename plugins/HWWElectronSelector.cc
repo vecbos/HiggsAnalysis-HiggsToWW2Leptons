@@ -14,7 +14,7 @@
 // Original Author:  Thomas Punz
 // Revised by: Emanuele Di Marco
 //         Created:  Wed Jan 30 11:13:18 CET 2008
-// $Id: HWWElectronSelector.cc,v 1.3 2008/09/24 13:26:17 emanuele Exp $
+// $Id: HWWElectronSelector.cc,v 1.4 2009/09/27 16:16:18 emanuele Exp $
 //
 //
 
@@ -39,7 +39,12 @@
 
 HWWElectronSelector::HWWElectronSelector(const edm::ParameterSet& iConfig)
 {
-  electronIdCutsLabel_ = iConfig.getParameter<edm::InputTag>("electronIdCutsLabel");
+  hoverCut_	    = iConfig.getParameter<double>("hoverCut");
+  sigmaetaetaEBCut_ = iConfig.getParameter<double>("sigmaetaetaEBCut");
+  sigmaetaetaEECut_ = iConfig.getParameter<double>("sigmaetaetaEECut");
+  deltaphiinCut_    = iConfig.getParameter<double>("deltaphiinCut");
+  deltaetainCut_    = iConfig.getParameter<double>("deltaetainCut");
+
 }
 
 
@@ -57,25 +62,28 @@ HWWElectronSelector::select (edm::Handle<reco::GsfElectronCollection> electrons,
   using namespace reco;
   selected_.clear();
 
-  std::vector<edm::Handle<edm::ValueMap<float> > > eIDValueMap(2);
-  
-  if ( iEvent.getByLabel( electronIdCutsLabel_ , eIDValueMap[0] ) ) {
+  // Loop over electrons
+  for (unsigned int i = 0; i < electrons->size(); i++) {	
+    Ref<reco::GsfElectronCollection> electronRef(electrons,i);
 
-    const edm::ValueMap<float> & eIdmapCuts = * eIDValueMap[0] ;
+    bool eleid = false;
 
-    // Loop over electrons
-    for (unsigned int i = 0; i < electrons->size(); i++) {	  
-      Ref<reco::GsfElectronCollection> electronRef(electrons,i);
-
-      bool eleid = false;
-
-      if( eIdmapCuts[electronRef] > 0 ) eleid = true;
-      
-      if (eleid==true) selected_.push_back (electronRef);
-      
+    if(electronRef->isEB() == true){
+      if(electronRef->hcalOverEcal()  < hoverCut_ &&
+         electronRef->sigmaIetaIeta() < sigmaetaetaEBCut_ &&
+	 electronRef->deltaPhiSuperClusterTrackAtVtx() < deltaphiinCut_ &&
+	 electronRef->deltaEtaSuperClusterTrackAtVtx() < deltaetainCut_)
+	  eleid = true;
+    } else {
+      if(electronRef->hcalOverEcal()  < hoverCut_ &&
+         electronRef->sigmaIetaIeta() < sigmaetaetaEECut_ &&
+	 electronRef->deltaPhiSuperClusterTrackAtVtx() < deltaphiinCut_ &&
+	 electronRef->deltaEtaSuperClusterTrackAtVtx() < deltaetainCut_)
+	  eleid = true;
     }
-  } else {
-    LogWarning("HWWElectronSelector") << "Product " << electronIdCutsLabel_ << " not available";
+    
+    if (eleid==true) selected_.push_back (electronRef);
+    
   }
 
 }
