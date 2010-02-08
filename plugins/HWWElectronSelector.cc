@@ -14,7 +14,7 @@
 // Original Author:  Thomas Punz
 // Revised by: Emanuele Di Marco
 //         Created:  Wed Jan 30 11:13:18 CET 2008
-// $Id: HWWElectronSelector.cc,v 1.5 2010/02/06 14:05:37 ceballos Exp $
+// $Id: HWWElectronSelector.cc,v 1.6 2010/02/08 14:06:22 ceballos Exp $
 //
 //
 
@@ -39,11 +39,11 @@
 
 HWWElectronSelector::HWWElectronSelector(const edm::ParameterSet& iConfig)
 {
-  hOverECut_	    = iConfig.getParameter<double>("hOverECut");
+  hOverECut_	      = iConfig.getParameter<double>("hOverECut");
   sigmaiEtaiEtaEBCut_ = iConfig.getParameter<double>("sigmaiEtaiEtaEBCut");
   sigmaiEtaiEtaEECut_ = iConfig.getParameter<double>("sigmaiEtaiEtaEECut");
-  deltaphiinCut_    = iConfig.getParameter<double>("deltaphiinCut");
-  deltaetainCut_    = iConfig.getParameter<double>("deltaetainCut");
+  deltaphiinCut_      = iConfig.getParameter<double>("deltaphiinCut");
+  deltaetainCut_      = iConfig.getParameter<double>("deltaetainCut");
 
 }
 
