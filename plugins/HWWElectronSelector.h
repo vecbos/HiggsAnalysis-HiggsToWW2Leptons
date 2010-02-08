@@ -24,9 +24,9 @@ class HWWElectronSelector  {
   // ----------member data ---------------------------
  private:
 
-  double hoverCut_;
-  double sigmaetaetaEBCut_;
-  double sigmaetaetaEECut_;
+  double hOverECut_;
+  double sigmaiEtaiEtaEBCut_;
+  double sigmaiEtaiEtaEECut_;
   double deltaphiinCut_;
   double deltaetainCut_;
 

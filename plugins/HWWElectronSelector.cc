@@ -14,7 +14,7 @@
 // Original Author:  Thomas Punz
 // Revised by: Emanuele Di Marco
 //         Created:  Wed Jan 30 11:13:18 CET 2008
-// $Id: HWWElectronSelector.cc,v 1.4 2009/09/27 16:16:18 emanuele Exp $
+// $Id: HWWElectronSelector.cc,v 1.5 2010/02/06 14:05:37 ceballos Exp $
 //
 //
 
@@ -39,9 +39,9 @@
 
 HWWElectronSelector::HWWElectronSelector(const edm::ParameterSet& iConfig)
 {
-  hoverCut_	    = iConfig.getParameter<double>("hoverCut");
-  sigmaetaetaEBCut_ = iConfig.getParameter<double>("sigmaetaetaEBCut");
-  sigmaetaetaEECut_ = iConfig.getParameter<double>("sigmaetaetaEECut");
+  hOverECut_	    = iConfig.getParameter<double>("hOverECut");
+  sigmaiEtaiEtaEBCut_ = iConfig.getParameter<double>("sigmaiEtaiEtaEBCut");
+  sigmaiEtaiEtaEECut_ = iConfig.getParameter<double>("sigmaiEtaiEtaEECut");
   deltaphiinCut_    = iConfig.getParameter<double>("deltaphiinCut");
   deltaetainCut_    = iConfig.getParameter<double>("deltaetainCut");
 
@@ -69,14 +69,14 @@ HWWElectronSelector::select (edm::Handle<reco::GsfElectronCollection> electrons,
     bool eleid = false;
 
     if(electronRef->isEB() == true){
-      if(electronRef->hcalOverEcal()  < hoverCut_ &&
-         electronRef->sigmaIetaIeta() < sigmaetaetaEBCut_ &&
+      if(electronRef->hcalOverEcal()  < hOverECut_ &&
+         electronRef->sigmaIetaIeta() < sigmaiEtaiEtaEBCut_ &&
 	 electronRef->deltaPhiSuperClusterTrackAtVtx() < deltaphiinCut_ &&
 	 electronRef->deltaEtaSuperClusterTrackAtVtx() < deltaetainCut_)
 	  eleid = true;
     } else {
-      if(electronRef->hcalOverEcal()  < hoverCut_ &&
-         electronRef->sigmaIetaIeta() < sigmaetaetaEECut_ &&
+      if(electronRef->hcalOverEcal()  < hOverECut_ &&
+         electronRef->sigmaIetaIeta() < sigmaiEtaiEtaEECut_ &&
 	 electronRef->deltaPhiSuperClusterTrackAtVtx() < deltaphiinCut_ &&
 	 electronRef->deltaEtaSuperClusterTrackAtVtx() < deltaetainCut_)
 	  eleid = true;
