@@ -146,7 +146,7 @@ ExpectedHitsComputer::produce(edm::Event & iEvent, const edm::EventSetup & iSetu
 
     int counter=0;
     for(vector<const DetLayer *>::const_iterator it=innerCompLayers.begin(); it!=innerCompLayers.end();
-	++it,++counter){
+	++it){
       vector< GeometricSearchDet::DetWithState > detWithState = (*it)->compatibleDets(tsos,
 										      *theProp.product(),
 										      estimator);
