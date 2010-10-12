@@ -35,7 +35,7 @@ class HWWMetCorrector : public edm::EDProducer {
    explicit HWWMetCorrector(const edm::ParameterSet&);
    ~HWWMetCorrector();
 
- private:
+ private: 
    virtual void beginJob(const edm::EventSetup&) ;
    virtual void produce(edm::Event&, const edm::EventSetup&);
    virtual void endJob() ;

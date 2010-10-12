@@ -36,7 +36,7 @@ HWWMetCorrector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   using namespace edm;
   using namespace std;
   using namespace reco;
-
+ 
   // get met from CMSSW
   Handle<reco::CaloMETCollection> calomet;
   iEvent.getByLabel(caloMetLabel_,calomet);
@@ -72,7 +72,8 @@ HWWMetCorrector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  track = muon->get<TrackRef>();
 	}
 	
-	if ( hasTrackerTrack && &track != 0 ) {
+	//if ( hasTrackerTrack && &track != 0 ) {
+	if ( hasTrackerTrack && track.isNonnull() ) {
 	  goodmuon = track->pt() > muonPtMin_ &&
 	    fabs(track->eta()) < muonEtaMax_ &&
 	    fabs(track->d0())  < muonTrackD0Max_ &&
@@ -84,7 +85,8 @@ HWWMetCorrector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 	if( goodmuon ) {
 	  bool goodtrackfit = false;
-	  if ( hasTrackerTrack && &track != 0 ) {
+	  //if ( hasTrackerTrack && &track != 0 ) {
+	  if ( hasTrackerTrack && track.isNonnull() ) {
 	    float dpt_track = track->error(0)/(track->qoverp());
 	    float chisq = track->normalizedChi2();
 	    if (dpt_track < muonDPtMax_  && chisq < muonChiSqMax_) goodtrackfit = true;

@@ -10,13 +10,12 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/JetReco/interface/CaloJetCollection.h"
-#include "PhysicsTools/UtilAlgos/interface/ObjectSelector.h"
-#include "PhysicsTools/UtilAlgos/interface/SortCollectionSelector.h"
-#include "PhysicsTools/UtilAlgos/interface/PtMinSelector.h"
-#include "PhysicsTools/UtilAlgos/interface/SingleElementCollectionSelector.h"
-#include "PhysicsTools/UtilAlgos/interface/ObjectCountFilter.h"
-#include "PhysicsTools/UtilAlgos/interface/SingleObjectSelector.h"
-//#include "PhysicsTools/UtilAlgos/interface/SingleObjectRefVectorSelector.h"
+#include "CommonTools/UtilAlgos/interface/ObjectSelector.h"
+#include "CommonTools/UtilAlgos/interface/SortCollectionSelector.h"
+#include "CommonTools/UtilAlgos/interface/PtMinSelector.h"
+#include "CommonTools/UtilAlgos/interface/SingleElementCollectionSelector.h"
+#include "CommonTools/UtilAlgos/interface/ObjectCountFilter.h"
+#include "CommonTools/UtilAlgos/interface/SingleObjectSelector.h"
 #include "DataFormats/Common/interface/RefVector.h" 
 
 #include "HiggsAnalysis/HiggsToWW2Leptons/plugins/HWWElectronSelector.h"
@@ -38,15 +37,16 @@ typedef ObjectSelector<HWWMuonIsolator, edm::RefVector<reco::MuonCollection> > H
 typedef ObjectSelector<HWWJetCleaner> HWWJetCleaning;
 typedef ObjectSelector<HWWJetCleaner, edm::RefVector<reco::CaloJetCollection> > HWWJetCleaningRef;
 
-DEFINE_SEAL_MODULE () ;
-DEFINE_ANOTHER_FWK_MODULE(HWWElectronSelection);
-DEFINE_ANOTHER_FWK_MODULE(HWWElectronSelectionRef);
-DEFINE_ANOTHER_FWK_MODULE(HWWMuonSelection);
-DEFINE_ANOTHER_FWK_MODULE(HWWMuonSelectionRef);
+//DEFINE_SEAL_MODULE () ;
+DEFINE_FWK_MODULE(HWWElectronSelection);
+DEFINE_FWK_MODULE(HWWElectronSelectionRef);
+DEFINE_FWK_MODULE(HWWMuonSelection);
+DEFINE_FWK_MODULE(HWWMuonSelectionRef);
 
-DEFINE_ANOTHER_FWK_MODULE(HWWElectronIsolation);
-DEFINE_ANOTHER_FWK_MODULE(HWWElectronIsolationRef);
-DEFINE_ANOTHER_FWK_MODULE(HWWMuonIsolation);
-DEFINE_ANOTHER_FWK_MODULE(HWWMuonIsolationRef);
-DEFINE_ANOTHER_FWK_MODULE(HWWJetCleaning);
-DEFINE_ANOTHER_FWK_MODULE(HWWJetCleaningRef) ;
+DEFINE_FWK_MODULE(HWWElectronIsolation);
+DEFINE_FWK_MODULE(HWWElectronIsolationRef);
+DEFINE_FWK_MODULE(HWWMuonIsolation);
+DEFINE_FWK_MODULE(HWWMuonIsolationRef);
+DEFINE_FWK_MODULE(HWWJetCleaning);
+DEFINE_FWK_MODULE(HWWJetCleaningRef) ;
+ 
