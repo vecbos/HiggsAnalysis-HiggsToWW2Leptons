@@ -40,7 +40,7 @@ process.output = cms.OutputModule("PoolOutputModule",
 # Additional output definition
 
 # Other statements
-process.GlobalTag.globaltag = 'START36_V10::All'
+process.GlobalTag.globaltag = 'START38_V12::All'
 
 # Path and EndPath definitions
 import HiggsAnalysis.HiggsToWW2Leptons.expectedHitsComputer_cfi
