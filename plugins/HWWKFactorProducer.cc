@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Joanna Weng
 //         Created:  Fri Feb  1 15:30:42 CET 2008
-// $Id: HWWKFactorProducer.cc,v 1.4 2009/10/03 11:12:29 ceballos Exp $
+// $Id: HWWKFactorProducer.cc,v 1.5 2009/10/03 11:43:04 ceballos Exp $
 //
 //
 
@@ -69,12 +69,6 @@ void HWWKFactorProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
   Handle<HepMCProduct> evt_h;
   iEvent.getByType(evt_h);
   
-  // get process id;  Does not work -> Ask Guillelmo?
-  // Handle< int > genProcessID;
-  //  iEvent.getByLabel( "genEventProcID", genProcessID );
-  // int ThisprocessID = *genProcessID;
-   // if ( ThisprocessID ==  processID){
-
   // Event weight to be stored in event
   std::auto_ptr<double> pweight(new double);
   *pweight=1.;
@@ -93,10 +87,16 @@ void HWWKFactorProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     if (debug_) std::cout << (*pt_histo_);
     math::XYZTLorentzVector tot_momentum(higgs[0]->momentum());
     //calculate bin size
-    double binsize = pt_histo_->GetXaxis()->GetXmax() /pt_histo_->GetNbinsX();
+    double binsize = (pt_histo_->GetXaxis()->GetXmax()-pt_histo_->GetXaxis()->GetXmin())/pt_histo_->GetNbinsX();
     double higgspt = tot_momentum.pt();
-    // which bin ?
-    int bin=int ((higgspt /binsize)) ;
+    int bin = 0;
+    // underflow protection: use underflow entry
+    if(higgspt >= pt_histo_->GetXaxis()->GetXmin()){
+      bin = Int_t((higgspt-pt_histo_->GetXaxis()->GetXmin())/binsize) + 1;
+    }
+    // overflow protection: use overflow entry
+    if(bin > pt_histo_->GetNbinsX()) bin=pt_histo_->GetNbinsX()+1;
+
     if (debug_){
     std::cout <<" Bin Size "<< binsize <<std::endl;
     std::cout <<" Higgs Pt "<< higgspt <<std::endl;
