@@ -38,7 +38,7 @@ class HWWKFactorProducer : public edm::EDProducer {
       // ----------member data ---------------------------
      
   std::string inputFilename_;
-  int  processID_;
+  unsigned int  processID_;
   HWWKfactorList* pt_histo_;
   bool debug_;
 };

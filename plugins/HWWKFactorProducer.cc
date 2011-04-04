@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Joanna Weng
 //         Created:  Fri Feb  1 15:30:42 CET 2008
-// $Id: HWWKFactorProducer.cc,v 1.5 2009/10/03 11:43:04 ceballos Exp $
+// $Id: HWWKFactorProducer.cc,v 1.6 2011/03/18 14:02:05 ceballos Exp $
 //
 //
 
@@ -36,8 +36,13 @@ Implementation:
 #include "DataFormats/Math/interface/LorentzVector.h"
 
 #include "HepMC/WeightContainer.h"
-#include "HepMC/GenEvent.h"
-#include "HepMC/GenParticle.h"
+//#include "HepMC/GenEvent.h"
+//#include "HepMC/GenParticle.h"
+
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
+
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 
 #include "TH1D.h"
@@ -65,27 +70,30 @@ void HWWKFactorProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
 
 {
   using namespace edm;
-  // get HepMC::GenEvent ...
-  Handle<HepMCProduct> evt_h;
-  iEvent.getByType(evt_h);
-  
+
   // Event weight to be stored in event
   std::auto_ptr<double> pweight(new double);
   *pweight=1.;
 
-  HepMC::GenEvent* evt = new  HepMC::GenEvent(*(evt_h->GetEvent()));   
-  if (debug_)std::cout << " Process Id " << evt->signal_process_id()   << std::endl; 
+  Handle<reco::GenParticleCollection> genParticles;
+  iEvent.getByLabel("genParticles", genParticles);
+
+   // use event info product
+  Handle<GenEventInfoProduct> hEvtInfo;
+  iEvent.getByLabel("generator", hEvtInfo);
+
+  if (debug_)std::cout << " Process Id " << hEvtInfo->signalProcessID()   << std::endl; 
   // Gluon Fusion found
-  if ( processID_ == evt->signal_process_id() ){
+  if ( processID_ == hEvtInfo->signalProcessID() ){
     // look for Higgs Boson and determine its pt
-    std::vector<HepMC::GenParticle*> higgs;
-    for(HepMC::GenEvent::particle_iterator it = evt->particles_begin(); it != evt->particles_end(); ++it){
-      if(abs((*it)->pdg_id())==25)
-	higgs.push_back(*it);
+    reco::GenParticleCollection::const_iterator higgs;
+    for(reco::GenParticleCollection::const_iterator mcIter=genParticles->begin(); mcIter != genParticles->end(); mcIter++){
+      if(abs(mcIter->pdgId())==25)
+	{higgs=mcIter; continue;}
     }
     //Print the complete table
     if (debug_) std::cout << (*pt_histo_);
-    math::XYZTLorentzVector tot_momentum(higgs[0]->momentum());
+    math::XYZTLorentzVector tot_momentum(higgs->p4());
     //calculate bin size
     double binsize = (pt_histo_->GetXaxis()->GetXmax()-pt_histo_->GetXaxis()->GetXmin())/pt_histo_->GetNbinsX();
     double higgspt = tot_momentum.pt();
@@ -105,7 +113,6 @@ void HWWKFactorProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     }
     // get KFactor
     *pweight=  pt_histo_->GetBinContent(bin);
-    delete evt;
   }
   iEvent.put(pweight);
 }
