@@ -8,6 +8,7 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Utilities/interface/InputTag.h"
 
 #include "HepMC/WeightContainer.h"
 #include "HepMC/GenEvent.h"
@@ -37,10 +38,11 @@ class HWWKFactorProducer : public edm::EDProducer {
 
       // ----------member data ---------------------------
      
-  std::string inputFilename_;
-  unsigned int  processID_;
-  HWWKfactorList* pt_histo_;
-  bool debug_;
+      edm::InputTag    genParticlesTag_;
+      std::string inputFilename_;
+      unsigned int  processID_;
+      HWWKfactorList* pt_histo_;
+      bool debug_;
 };
 
 #endif

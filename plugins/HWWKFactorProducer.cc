@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Joanna Weng
 //         Created:  Fri Feb  1 15:30:42 CET 2008
-// $Id: HWWKFactorProducer.cc,v 1.6 2011/03/18 14:02:05 ceballos Exp $
+// $Id: HWWKFactorProducer.cc,v 1.7 2011/04/04 09:22:27 ceballos Exp $
 //
 //
 
@@ -53,6 +53,7 @@ Implementation:
 HWWKFactorProducer::HWWKFactorProducer(const edm::ParameterSet& iConfig): pt_histo_(0),debug_(0)
 {
   produces<double>();
+  genParticlesTag_ = iConfig.getParameter<edm::InputTag>("genParticlesTag");
   inputFilename_=iConfig.getUntrackedParameter<std::string>("inputFilename","dummy.root");  
   processID_ = iConfig.getUntrackedParameter<int>("ProcessID",0);  
   debug_ = iConfig.getUntrackedParameter<bool>("Debug",0);
@@ -76,7 +77,8 @@ void HWWKFactorProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
   *pweight=1.;
 
   Handle<reco::GenParticleCollection> genParticles;
-  iEvent.getByLabel("genParticles", genParticles);
+  iEvent.getByLabel(genParticlesTag_, genParticles);
+
 
    // use event info product
   Handle<GenEventInfoProduct> hEvtInfo;
