@@ -28,6 +28,9 @@ class HWWKfactorList : public TH1D {
   /// create an empty map and initialize it 
   HWWKfactorList(const char* name, 
 		  unsigned nbinspt, double minpt, double maxpt, double value);
+
+  // create a variable binning map and initialize it
+  HWWKfactorList(const char* name, unsigned nbinspt, const double* ptbins, double value);
   
   /// create a map from a 1d histogram
   HWWKfactorList(const TH1D& h) : TH1D(h) {}
@@ -35,6 +38,8 @@ class HWWKfactorList : public TH1D {
 
   /// read text file
   bool ReadMapFile(const char* mapfile);
+
+  bool ReadVarBinMapFile( const char* mapfile );
 
   /// write text file
   /// is not const because mapFile_ will be updated

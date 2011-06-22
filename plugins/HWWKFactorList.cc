@@ -20,9 +20,26 @@ HWWKfactorList::HWWKfactorList(const char* name, unsigned nbinspt,
   GetYaxis()->SetTitle("Kfactor");
   if(value>0)
   {
-    for(int ieta=1; ieta<=GetNbinsX(); ieta++)
+    for(int i=1; i<=GetNbinsX(); i++)
     {
-      SetBinContent(ieta, value);
+      SetBinContent(i, value);
+    }
+  }
+
+}
+
+HWWKfactorList::HWWKfactorList(const char* name, unsigned nbinspt,
+                               const double* ptbins,  double value)
+  : TH1D(name, name, nbinspt, ptbins), alternativeK_(1.), alternativeNNLOK_(1.)
+{
+
+  GetXaxis()->SetTitle("#pt");
+  GetYaxis()->SetTitle("Kfactor");
+  if(value>0)
+  {
+    for(int i=1; i<=GetNbinsX(); i++)
+    {
+      SetBinContent(i, value);
     }
   }
 
@@ -35,12 +52,16 @@ HWWKfactorList::HWWKfactorList(const char* name, const char* mapfile)
   SetTitle(mapfile);
   GetXaxis()->SetTitle("#eta");
   GetYaxis()->SetTitle("E");
-  if( ! ReadMapFile(mapfile) )
+//   if( ! ReadMapFile(mapfile) )
+  if( ! ReadVarBinMapFile(mapfile) )
   {
     string err = "HWWKfactorList::HWWKfactorList : cannot read file ";
     err += mapfile;
     throw invalid_argument(err);
   }
+
+//   std::cout << *this << std::endl;
+
 }
 
 
@@ -66,6 +87,70 @@ bool HWWKfactorList::WriteMapFile(const char* mapfile)
     return true;
   }
 }
+
+
+bool HWWKfactorList::ReadVarBinMapFile( const char* mapfile ) {
+
+  // open the file
+  ifstream inf(mapfile);
+  if( !inf.good() )
+  {
+    return false;
+  }
+  // first data describes the map: histo bin, max, min
+  int nbinspt=0;
+  double minpt=0;
+  double maxpt=0;
+  std::string dummy;
+  inf>>nbinspt;inf>>dummy;
+  inf>>minpt;inf>>dummy;
+  inf>>maxpt;inf>>dummy;
+  inf>>this->alternativeK_;inf>>dummy;
+  inf>>this->alternativeNNLOK_;inf>>dummy;inf>>dummy;
+
+  std::vector<double> binlow, binhigh, binvalue;
+
+  double low, high, value;
+  int k(0);
+  for( ;; ++k) { 
+    inf >> low >> high >> value;
+    if ( !inf.good() )
+        break;
+//     std::cout << low << "   " << high << " " << value << std::endl;
+    binlow.push_back(low);
+    binhigh.push_back(high);
+    binvalue.push_back(value);
+
+  }
+
+//   std::cout << "k " << k << "   nbins" << nbinspt << std::endl; 
+
+  if ( k != nbinspt ) {
+    throw runtime_error( "Wrong number of bins read. Corrupted file?" );
+  } 
+
+  double* xbins = new double[nbinspt];
+  for( int i(0); i<nbinspt; ++i ) {
+    if ( i != 0  && binhigh[i-1] != binlow[i] ) 
+        throw runtime_error( "Bin edge mismatch. Corrupted file?" );
+
+    xbins[i] = binlow[i];
+    xbins[i+1] = binhigh[i];
+
+  }
+
+  this->SetBins(nbinspt, xbins);
+
+  for( int i(0); i<nbinspt; ++i ) {
+      this->SetBinContent(i+1,binvalue[i]);
+  }
+
+  
+  delete [] xbins;
+  return true;
+
+}
+
 
 
 
@@ -136,12 +221,13 @@ ostream& operator<<(ostream& outf, const HWWKfactorList& rm)
   if(!outf.good() ) return outf;
 
   // first data describes the map
-  outf<<rm.GetNbinsX()<<endl;
-  outf<<rm.GetXaxis()->GetXmin()<<endl;
-  outf<<rm.GetXaxis()->GetXmax()<<endl;
+  outf<<rm.GetNbinsX()<< "\t#nbins" << endl;
+  outf<<rm.GetXaxis()->GetXmin()<< "\t#lowedge"<< endl;
+  outf<<rm.GetXaxis()->GetXmax()<< "\t#highedge" << endl;
 
-  for(int ieta=0; ieta<=rm.GetNbinsX(); ieta++){
-    outf<<ieta<<" "<<rm.GetBinContent(ieta)<<"\t";
+  TAxis* ax = rm.GetXaxis();
+  for(int i=0; i<=rm.GetNbinsX(); i++){
+    outf<< ax->GetBinLowEdge(i) << '\t' << ax->GetBinUpEdge(i) << '\t' << rm.GetBinContent(i)<<"\n";
   }
   outf<<endl;
   return outf;
