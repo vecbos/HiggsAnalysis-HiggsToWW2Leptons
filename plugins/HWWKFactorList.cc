@@ -129,7 +129,7 @@ bool HWWKfactorList::ReadVarBinMapFile( const char* mapfile ) {
     throw runtime_error( "Wrong number of bins read. Corrupted file?" );
   } 
 
-  double* xbins = new double[nbinspt];
+  double* xbins = new double[nbinspt+1];
   for( int i(0); i<nbinspt; ++i ) {
     if ( i != 0  && binhigh[i-1] != binlow[i] ) 
         throw runtime_error( "Bin edge mismatch. Corrupted file?" );
