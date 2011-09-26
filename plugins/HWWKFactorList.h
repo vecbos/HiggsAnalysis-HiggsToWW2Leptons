@@ -45,6 +45,9 @@ class HWWKfactorList : public TH1D {
   /// is not const because mapFile_ will be updated
   bool WriteMapFile(const char* mapfile);
 
+  /// all the information is here, why not just ask?
+  int GetBinFromPt(const double &pt);
+  double GetWeightFromPt(const double &pt) { return GetBinContent(GetBinFromPt(pt)); }
   
   const char* GetMapFile() const {return mapFile_.c_str();}
 

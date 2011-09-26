@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Joanna Weng
 //         Created:  Fri Feb  1 15:30:42 CET 2008
-// $Id: HWWKFactorProducer.cc,v 1.7 2011/04/04 09:22:27 ceballos Exp $
+// $Id: HWWKFactorProducer.cc,v 1.8 2011/05/17 09:15:33 mangano Exp $
 //
 //
 
@@ -96,25 +96,36 @@ void HWWKFactorProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
     //Print the complete table
     if (debug_) std::cout << (*pt_histo_);
     math::XYZTLorentzVector tot_momentum(higgs->p4());
-    //calculate bin size
-    double binsize = (pt_histo_->GetXaxis()->GetXmax()-pt_histo_->GetXaxis()->GetXmin())/pt_histo_->GetNbinsX();
-    double higgspt = tot_momentum.pt();
-    int bin = 0;
-    // underflow protection: use underflow entry
-    if(higgspt >= pt_histo_->GetXaxis()->GetXmin()){
-      bin = Int_t((higgspt-pt_histo_->GetXaxis()->GetXmin())/binsize) + 1;
-    }
-    // overflow protection: use overflow entry
-    if(bin > pt_histo_->GetNbinsX()) bin=pt_histo_->GetNbinsX()+1;
 
-    if (debug_){
-    std::cout <<" Bin Size "<< binsize <<std::endl;
-    std::cout <<" Higgs Pt "<< higgspt <<std::endl;
-    std::cout <<" Bin  "<< bin <<std::endl;
-    std::cout <<" KFactor "<<   pt_histo_->GetBinContent(bin) <<std::endl;
-    }
+    //old implemenation
+    //calculate bin size
+    //double binsize = (pt_histo_->GetXaxis()->GetXmax()-pt_histo_->GetXaxis()->GetXmin())/pt_histo_->GetNbinsX();
+    //double higgspt = tot_momentum.pt();
+    //int bin = 0;
+    // underflow protection: use underflow entry
+    //if(higgspt >= pt_histo_->GetXaxis()->GetXmin()){
+    //  bin = Int_t((higgspt-pt_histo_->GetXaxis()->GetXmin())/binsize) + 1;
+    //}
+    // overflow protection: use overflow entry
+    //if(bin > pt_histo_->GetNbinsX()) bin=pt_histo_->GetNbinsX()+1;
+    //if (debug_){
+    //std::cout <<" Bin Size "<< binsize <<std::endl;
+    //std::cout <<" Higgs Pt "<< higgspt <<std::endl;
+    //std::cout <<" Bin  "<< bin <<std::endl;
+    //std::cout <<" KFactor "<<   pt_histo_->GetBinContent(bin) <<std::endl;
+    //}
     // get KFactor
-    *pweight=  pt_histo_->GetBinContent(bin);
+    //old implementation
+    //*pweight=  pt_histo_->GetBinContent(bin);
+
+    //new implementation
+    if (debug_){
+    std::cout <<" Bin Size "<< "it's variable" <<std::endl;
+    std::cout <<" Higgs Pt "<< tot_momentum.pt() <<std::endl;
+    std::cout <<" Bin  "<< pt_histo_->GetBinFromPt(tot_momentum.pt()) <<std::endl;
+    std::cout <<" KFactor "<<   pt_histo_->GetWeightFromPt(tot_momentum.pt()) <<std::endl;
+    }
+    *pweight=  pt_histo_->GetWeightFromPt(tot_momentum.pt());
   }
   iEvent.put(pweight);
 }

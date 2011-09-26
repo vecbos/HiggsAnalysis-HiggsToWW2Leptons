@@ -232,3 +232,13 @@ ostream& operator<<(ostream& outf, const HWWKfactorList& rm)
   outf<<endl;
   return outf;
 }
+
+int HWWKfactorList::GetBinFromPt(const double& pt) {
+
+    if (pt < GetBinLowEdge(1) || pt > GetBinLowEdge(GetNbinsX()+1) )  {
+        return GetNbinsX()+1;
+    } else {
+        return FindBin(pt);
+    }
+
+}
