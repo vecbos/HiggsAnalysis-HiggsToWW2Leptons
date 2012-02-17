@@ -1,5 +1,6 @@
 <use   name="RecoEcal/EgammaCoreTools"/>
 <use   name="TrackingTools/IPTools"/>
+<use   name="DataFormats/MuonReco"/>
 <use   name="root"/>
 <use   name="roottmva"/>
 <export>

@@ -5,6 +5,9 @@
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+#include "DataFormats/Common/interface/RefToPtr.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
@@ -93,6 +96,37 @@ void ElectronIDMVA::Initialize( std::string methodName,
       fTMVAReader[i]->AddVariable( "ESeedClusterOverPIn",   &fMVAVar_EleESeedClusterOverPIn   );
       fTMVAReader[i]->AddVariable( "IP3d",                  &fMVAVar_EleIP3d                  );
       fTMVAReader[i]->AddVariable( "IP3dSig",               &fMVAVar_EleIP3dSig               );
+    }
+    if (type == kIDIsoCombined) {
+      fTMVAReader[i]->AddVariable( "SigmaIEtaIEta",         &fMVAVar_EleSigmaIEtaIEta            );
+      fTMVAReader[i]->AddVariable( "DEtaIn",                &fMVAVar_EleDEtaIn                   );
+      fTMVAReader[i]->AddVariable( "DPhiIn",                &fMVAVar_EleDPhiIn                   );
+      fTMVAReader[i]->AddVariable( "D0",                    &fMVAVar_EleD0                       );
+      fTMVAReader[i]->AddVariable( "FBrem",                 &fMVAVar_EleFBrem                    );
+      fTMVAReader[i]->AddVariable( "EOverP",                &fMVAVar_EleEOverP                   );
+      fTMVAReader[i]->AddVariable( "ESeedClusterOverPout",  &fMVAVar_EleESeedClusterOverPout     );
+      fTMVAReader[i]->AddVariable( "SigmaIPhiIPhi",         &fMVAVar_EleSigmaIPhiIPhi            );
+      fTMVAReader[i]->AddVariable( "OneOverEMinusOneOverP", &fMVAVar_EleOneOverEMinusOneOverP    );      
+      fTMVAReader[i]->AddVariable( "ESeedClusterOverPIn",   &fMVAVar_EleESeedClusterOverPIn      );
+      fTMVAReader[i]->AddVariable( "IP3d",                  &fMVAVar_EleIP3d                     );
+      fTMVAReader[i]->AddVariable( "IP3dSig",               &fMVAVar_EleIP3dSig                  );
+
+      fTMVAReader[i]->AddVariable( "GsfTrackChi2OverNdof",  &fMVAVar_EleGsfTrackChi2OverNdof     );
+      fTMVAReader[i]->AddVariable( "dEtaCalo",              &fMVAVar_EledEtaCalo                 );
+      fTMVAReader[i]->AddVariable( "dPhiCalo",              &fMVAVar_EledPhiCalo                 );
+      fTMVAReader[i]->AddVariable( "R9",                    &fMVAVar_EleR9                       );
+      fTMVAReader[i]->AddVariable( "SCEtaWidth",            &fMVAVar_EleSCEtaWidth               );
+      fTMVAReader[i]->AddVariable( "SCPhiWidth",            &fMVAVar_EleSCPhiWidth               );
+      fTMVAReader[i]->AddVariable( "CovIEtaIPhi",           &fMVAVar_EleCovIEtaIPhi              );
+      if (i == 2 || i == 5) {
+        fTMVAReader[i]->AddVariable( "PreShowerOverRaw",      &fMVAVar_ElePreShowerOverRaw       );
+      }
+      fTMVAReader[i]->AddVariable( "ChargedIso03",          &fMVAVar_EleChargedIso03OverPt       );
+      fTMVAReader[i]->AddVariable( "NeutralHadronIso03",    &fMVAVar_EleNeutralHadronIso03OverPt );
+      fTMVAReader[i]->AddVariable( "GammaIso03",            &fMVAVar_EleGammaIso03OverPt         );
+      fTMVAReader[i]->AddVariable( "ChargedIso04",          &fMVAVar_EleChargedIso04OverPt       );
+      fTMVAReader[i]->AddVariable( "NeutralHadronIso04",    &fMVAVar_EleNeutralHadronIso04OverPt );
+      fTMVAReader[i]->AddVariable( "GammaIso04",            &fMVAVar_EleGammaIso04OverPt         );
     }
 
     if (i==0) fTMVAReader[i]->BookMVA(fMethodname , Subdet0Pt10To20Weights );
@@ -184,7 +218,10 @@ Double_t ElectronIDMVA::MVAValue(Double_t ElePt , Double_t EleSCEta,
 //--------------------------------------------------------------------------------------------------
 Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Vertex vertex, 
                                  EcalClusterLazyTools myEcalCluster,
-                                 const TransientTrackBuilder *transientTrackBuilder) {
+                                 const TransientTrackBuilder *transientTrackBuilder,
+                                 const reco::PFCandidateCollection &PFCandidates,
+                                 double Rho
+) {
   
   if (!fIsInitialized) { 
     std::cout << "Error: ElectronIDMVA not properly initialized.\n"; 
@@ -206,7 +243,21 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Verte
   fMVAVar_EleESeedClusterOverPIn = -9999.0;
   fMVAVar_EleIP3d = -9999.0;
   fMVAVar_EleIP3dSig = -9999.0;
-
+  fMVAVar_EleGsfTrackChi2OverNdof = -9999.0;
+  fMVAVar_EledEtaCalo = -9999.0;
+  fMVAVar_EledPhiCalo = -9999.0;
+  fMVAVar_EleR9 = -9999.0;
+  fMVAVar_EleSCEtaWidth = -9999.0;
+  fMVAVar_EleSCPhiWidth = -9999.0;
+  fMVAVar_EleCovIEtaIPhi = -9999.0;
+  fMVAVar_ElePreShowerOverRaw = -9999.0;
+  fMVAVar_EleChargedIso03OverPt = -9999.0;
+  fMVAVar_EleNeutralHadronIso03OverPt = -9999.0;
+  fMVAVar_EleGammaIso03OverPt = -9999.0;
+  fMVAVar_EleChargedIso04OverPt = -9999.0;
+  fMVAVar_EleNeutralHadronIso04OverPt = -9999.0;
+  fMVAVar_EleGammaIso04OverPt = -9999.0;
+  
   Int_t subdet = 0;
   if (fabs(ele->superCluster()->eta()) < 1.0) subdet = 0;
   else if (fabs(ele->superCluster()->eta()) < 1.479) subdet = 1;
@@ -214,6 +265,16 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Verte
   Int_t ptBin = 0;
   if (ele->pt() > 20.0) ptBin = 1;
   
+  double rho = 0;
+  if (!(isnan(Rho) || isinf(Rho))) rho = Rho;
+
+  double electronTrackZ = 0;
+  if (ele->gsfTrack().isNonnull()) {
+    electronTrackZ = ele->gsfTrack()->dz(vertex.position());
+  } else if (ele->closestCtfTrackRef().isNonnull()) {
+    electronTrackZ = ele->closestCtfTrackRef()->dz(vertex.position());
+  }
+
   //set all input variables
   fMVAVar_EleSigmaIEtaIEta = ele->sigmaIetaIeta() ; 
   fMVAVar_EleDEtaIn = ele->deltaEtaSuperClusterTrackAtVtx();
@@ -258,6 +319,85 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Verte
       fMVAVar_EleIP3dSig = ip3d/ip3derr;
     }
   }
+
+
+  fMVAVar_EleGsfTrackChi2OverNdof = ele->gsfTrack()->chi2() / (double)ele->gsfTrack()->ndof();
+  fMVAVar_EledEtaCalo = ele->deltaEtaSeedClusterTrackAtCalo();
+  fMVAVar_EledPhiCalo = ele->deltaPhiSeedClusterTrackAtCalo();
+  fMVAVar_EleR9 = myEcalCluster.e3x3(*(ele->superCluster()->seed())) / ele->superCluster()->rawEnergy();
+  fMVAVar_EleSCEtaWidth = ele->superCluster()->etaWidth();
+  fMVAVar_EleSCPhiWidth = ele->superCluster()->phiWidth();
+  fMVAVar_EleCovIEtaIPhi = vCov[1];
+  fMVAVar_ElePreShowerOverRaw = ele->superCluster()->preshowerEnergy() / ele->superCluster()->rawEnergy();
+
+  
+
+  double chargedIso03 = 0;
+  double gammaIso03 = 0;
+  double neutralHadronIso03 = 0;
+  double chargedIso04 = 0;
+  double gammaIso04 = 0;
+  double neutralHadronIso04 = 0;
+  for (reco::PFCandidateCollection::const_iterator iP = PFCandidates.begin(); 
+       iP != PFCandidates.end(); ++iP) {
+
+    //exclude the electron itself
+    if(iP->gsfTrackRef().isNonnull() && ele->gsfTrack().isNonnull() &&
+       refToPtr(iP->gsfTrackRef()) == refToPtr(ele->gsfTrack())) continue;
+    if(iP->trackRef().isNonnull() && ele->closestCtfTrackRef().isNonnull() &&
+       refToPtr(iP->trackRef()) == refToPtr(ele->closestCtfTrackRef())) continue;      
+
+    double dr = sqrt(pow(iP->eta() - ele->eta(),2) + pow(acos(cos(iP->phi() - ele->phi())),2));
+    
+    //charged PFCand
+    if (iP->trackRef().isNonnull()) {
+      Double_t deltaZ = fabs(iP->trackRef()->dz(vertex.position()) - electronTrackZ);
+      if (deltaZ <= 0.1) {
+        if (dr < 0.3) chargedIso03 += iP->pt();
+        if (dr < 0.4) chargedIso04 += iP->pt();
+      }
+    } 
+    //PF gamma
+    else if (iP->particleId() == reco::PFCandidate::gamma) {
+      if (iP->pt() > 0.5 
+          && 
+          fabs(ele->eta() - iP->eta()) >= 0.025                    
+        ) {
+        if (dr < 0.3) gammaIso03 += iP->pt();
+        if (dr < 0.4) gammaIso04 += iP->pt();
+      }
+    } else {
+      if (dr >= 0.07) {
+        if (dr < 0.3) neutralHadronIso03 += iP->pt();
+        if (dr < 0.4) neutralHadronIso04 += iP->pt();
+      }
+    }
+  }
+
+  fMVAVar_EleChargedIso03OverPt 
+    = (chargedIso03 
+       - rho * ElectronEffectiveArea(kEleChargedIso03, ele->superCluster()->eta())) / ele->pt();
+  fMVAVar_EleGammaIso03OverPt 
+    = (gammaIso03 
+       - rho * ElectronEffectiveArea(kEleGammaIso03, ele->superCluster()->eta()) 
+       + rho * ElectronEffectiveArea(kEleGammaIsoVetoEtaStrip03,ele->superCluster()->eta()))/ele->pt();
+  fMVAVar_EleNeutralHadronIso03OverPt 
+    = (neutralHadronIso03
+       - rho * ElectronEffectiveArea(kEleNeutralHadronIso03, ele->superCluster()->eta()) 
+       + rho * ElectronEffectiveArea(kEleNeutralHadronIso007,ele->superCluster()->eta())) / ele->pt();
+  fMVAVar_EleChargedIso04OverPt 
+    = (chargedIso04 
+       - rho * ElectronEffectiveArea(kEleChargedIso04, ele->superCluster()->eta()))/ele->pt();
+  fMVAVar_EleGammaIso04OverPt 
+    = (gammaIso04 
+       - rho * ElectronEffectiveArea(kEleGammaIso04, ele->superCluster()->eta()) 
+       + rho * ElectronEffectiveArea(kEleGammaIsoVetoEtaStrip04,ele->superCluster()->eta()))/ele->pt();
+  fMVAVar_EleNeutralHadronIso04OverPt
+    = (neutralHadronIso04 
+       - rho * ElectronEffectiveArea(kEleNeutralHadronIso04, ele->superCluster()->eta()) 
+       + rho * ElectronEffectiveArea(kEleNeutralHadronIso007,ele->superCluster()->eta()))/ele->pt();
+  
+
 
   Double_t mva = -9999;  
   TMVA::Reader *reader = 0;
@@ -390,6 +530,81 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele,
 //   std::cout << "********************************\n";
 
   return mva;
+}
+
+
+double ElectronIDMVA::ElectronEffectiveArea(ElectronEffectiveAreaType type, double Eta) {
+
+  double EffectiveArea = 0;
+
+  if (fabs(Eta) < 1.0) {
+    if (type == kEleChargedIso03) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso03) EffectiveArea = 0.017;
+    if (type == kEleGammaIso03) EffectiveArea = 0.045;
+    if (type == kEleGammaIsoVetoEtaStrip03) EffectiveArea = 0.014;
+    if (type == kEleChargedIso04) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso04) EffectiveArea = 0.034;
+    if (type == kEleGammaIso04) EffectiveArea = 0.079;
+    if (type == kEleGammaIsoVetoEtaStrip04) EffectiveArea = 0.014;
+    if (type == kEleNeutralHadronIso007) EffectiveArea = 0.000;
+    if (type == kEleHoverE) EffectiveArea = 0.00016;
+    if (type == kEleHcalDepth1OverEcal) EffectiveArea = 0.00016;
+    if (type == kEleHcalDepth2OverEcal) EffectiveArea = 0.00000;    
+  } else if (fabs(Eta) >= 1.0 && fabs(Eta) < 1.479 ) {
+    if (type == kEleChargedIso03) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso03) EffectiveArea = 0.025;
+    if (type == kEleGammaIso03) EffectiveArea = 0.052;
+    if (type == kEleGammaIsoVetoEtaStrip03) EffectiveArea = 0.030;
+    if (type == kEleChargedIso04) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso04) EffectiveArea = 0.050;
+    if (type == kEleGammaIso04) EffectiveArea = 0.073;
+    if (type == kEleGammaIsoVetoEtaStrip04) EffectiveArea = 0.030;
+    if (type == kEleNeutralHadronIso007) EffectiveArea = 0.000;
+    if (type == kEleHoverE) EffectiveArea = 0.00022;
+    if (type == kEleHcalDepth1OverEcal) EffectiveArea = 0.00022;
+    if (type == kEleHcalDepth2OverEcal) EffectiveArea = 0.00000;    
+  } else if (fabs(Eta) >= 1.479 && fabs(Eta) < 2.0 ) {
+    if (type == kEleChargedIso03) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso03) EffectiveArea = 0.030;
+    if (type == kEleGammaIso03) EffectiveArea = 0.170;
+    if (type == kEleGammaIsoVetoEtaStrip03) EffectiveArea = 0.134;
+    if (type == kEleChargedIso04) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso04) EffectiveArea = 0.060;
+    if (type == kEleGammaIso04) EffectiveArea = 0.187;
+    if (type == kEleGammaIsoVetoEtaStrip04) EffectiveArea = 0.134;
+    if (type == kEleNeutralHadronIso007) EffectiveArea = 0.000;
+    if (type == kEleHoverE) EffectiveArea = 0.00030;
+    if (type == kEleHcalDepth1OverEcal) EffectiveArea = 0.00026;
+    if (type == kEleHcalDepth2OverEcal) EffectiveArea = 0.00002;        
+  } else if (fabs(Eta) >= 2.0 && fabs(Eta) < 2.25 ) {
+    if (type == kEleChargedIso03) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso03) EffectiveArea = 0.022;
+    if (type == kEleGammaIso03) EffectiveArea = 0.623;
+    if (type == kEleGammaIsoVetoEtaStrip03) EffectiveArea = 0.516;
+    if (type == kEleChargedIso04) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso04) EffectiveArea = 0.055;
+    if (type == kEleGammaIso04) EffectiveArea = 0.659;
+    if (type == kEleGammaIsoVetoEtaStrip04) EffectiveArea = 0.517;
+    if (type == kEleNeutralHadronIso007) EffectiveArea = 0.000;
+    if (type == kEleHoverE) EffectiveArea = 0.00054;
+    if (type == kEleHcalDepth1OverEcal) EffectiveArea = 0.00045;
+    if (type == kEleHcalDepth2OverEcal) EffectiveArea = 0.00003;
+  } else if (fabs(Eta) >= 2.25 && fabs(Eta) < 2.5 ) {
+    if (type == kEleChargedIso03) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso03) EffectiveArea = 0.018;
+    if (type == kEleGammaIso03) EffectiveArea = 1.198;
+    if (type == kEleGammaIsoVetoEtaStrip03) EffectiveArea = 1.049;
+    if (type == kEleChargedIso04) EffectiveArea = 0.000;
+    if (type == kEleNeutralHadronIso04) EffectiveArea = 0.073;
+    if (type == kEleGammaIso04) EffectiveArea = 1.258;
+    if (type == kEleGammaIsoVetoEtaStrip04) EffectiveArea = 1.051;
+    if (type == kEleNeutralHadronIso007) EffectiveArea = 0.000;
+    if (type == kEleHoverE) EffectiveArea = 0.00082;
+    if (type == kEleHcalDepth1OverEcal) EffectiveArea = 0.00066;
+    if (type == kEleHcalDepth2OverEcal) EffectiveArea = 0.00004;
+  }
+    
+  return EffectiveArea;  
 }
 
 
