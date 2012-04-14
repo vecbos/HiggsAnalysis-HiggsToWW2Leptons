@@ -258,7 +258,7 @@ double MuonIDMVA::MVAValue(const reco::Muon *mu, const reco::Vertex vertex,
   //set all input variables
   fMVAVar_MuTkNchi2              = muTrk->chi2() / (Double_t)muTrk->ndof();
   fMVAVar_MuGlobalNchi2          = muNchi2;
-  fMVAVar_MuNValidHits           = mu->globalTrack()->hitPattern().numberOfValidMuonHits();
+  fMVAVar_MuNValidHits           = mu->globalTrack().isNonnull() ? mu->globalTrack()->hitPattern().numberOfValidMuonHits() : 0;
   fMVAVar_MuNTrackerHits         = muTrk->numberOfValidHits();
   fMVAVar_MuNPixelHits           = muTrk->hitPattern().numberOfValidPixelHits();
   fMVAVar_MuNMatches             = mu->numberOfMatches();
